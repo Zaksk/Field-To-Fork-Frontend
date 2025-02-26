@@ -1,0 +1,304 @@
+/* 
+*{
+  box-sizing: border-box;
+} */
+body {
+  background-color: #f9f9f9;
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+.signin-up{
+  
+  color:rgb(99, 98, 98);
+  align-items: center;
+  text-align: center;
+}
+.signin-up a{
+  font-size: 10px;
+  color:rgb(99, 98, 98);
+  align-items: center;
+  text-decoration: none;
+  text-align: center;
+}
+.above-nav{
+ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 10vh;
+  background-color: #f9f9f9;
+  color: rgb(99, 98, 98);
+  font-size: 2vh;
+  font-weight: bold;
+  gap: 200px;
+
+}
+.banner{
+  width:100%;
+  height: 10vh;
+  background-image: url(../assets/a-beta-background.jpg) ;
+  background-size: cover;
+  background-position:center;
+  
+}
+.search-bar button{
+  color:white;
+  background-color: #0A7029;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+
+}
+nav {
+  width: 100%;
+  display: flex;
+background-color: rgb(99, 98, 98);
+text-align: center;
+padding: 4px;
+align-items: center;
+justify-content: space-between;
+font-size: 10px;
+}
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 50px; /* Added spacing between links */
+  text-align: center;
+  align-items: center;
+}
+nav a {
+  color: black;
+  display: block;
+  text-decoration: none;
+  
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.search-bar input {
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.cart-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.login-form {
+  
+  margin-top:15vh;
+  margin-bottom:15vh;
+  padding: 5vh; /* Adjusted for uniform padding */
+    border-radius: 4vh;
+    box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.3);
+    width: 40vh; /* Responsive width */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Ensures child elements stay centered */
+    background:rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+}
+.login-form h2 {
+  text-align: center;
+  color: rgb(42, 27, 14) ;
+  margin-bottom: 3vh; 
+  font-size: 4vh
+}
+
+.login-form .form-group {
+  margin-bottom: 15px;
+}
+/* .login-form .form-group */
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  color: #023e8a;
+  width: 100%;
+} 
+
+/* .login-form .form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #0077b6;
+  border-radius: 4px;
+  color: #03045e;
+  box-sizing: border-box;
+} */
+.login-form .form-group input:focus {
+  border-color: #0A7029;
+  outline: none;
+  background-color: #c8df52;
+}
+.login-form .form-check {
+  display: flex;
+  align-items: center;
+  padding-bottom: 5px;
+}
+.login-form .form-check input {
+  margin-right: 10px;
+}
+.login-form .form-check label {
+  margin: 0;
+  color: #023e8a;
+}
+.login-form button {
+  width: 100%;
+  margin-top: 2.5vh;
+  padding: 2vh;
+  background: #0A7029; /* Main blue */
+  color: white;
+  border: none;
+  border-radius: 1.5vh;
+  cursor: pointer;
+  font-size: 2.2vh;
+}
+
+
+.login-form button:active {
+  background: #03045E; 
+}
+
+
+.login-form button:hover {
+  background: #0A7029; 
+}
+.login-form .text-center {
+  text-align: center;
+  margin-top: 10px;
+}
+.login-form .text-center a {
+  text-decoration: none;
+  color: #0A7029;
+}
+.login-form .text-center a:hover {
+  text-decoration: underline;
+}
+.form-group {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 5px; 
+  width: 100%;
+}
+
+.form-group i {
+  font-size: 20px; 
+  margin-right: 10px;
+  
+}
+
+.form-group input {
+  outline: none;
+  flex: 1;
+  font-size: 16px;
+  padding: 5px;
+  border: 0.1vh solid rgb(197, 197, 197);
+  border-radius: 2vh;
+  
+}
+.form-group i {
+    font-size: 20px; 
+    margin-right: 10px;
+    color:#0A7029
+}
+
+/*input {
+  width: 100%;
+  padding: 1.5vh;
+  border: 0.2vh solid white; /* Light blue */
+  /*border-radius: 3vh;
+  background-color: white; /* Soft blue */
+  /*color: #0A7029; *//* Dark navy for text */
+  /*font-size: 2vh; */
+
+
+/* Input focus effect */
+/* input:focus {
+  outline: none;
+  border-color: #0A7029; /* Darker blue */
+
+/* Navbar Styling
+.navbar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background: #023e8a;
+  padding: 2vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-link {
+  color: white;
+  font-size: 2vh;
+  text-decoration: none;
+  margin-left: 2vh;
+  font-weight: bold;
+}
+
+.nav-link:hover {
+  color: #CAF0F8; /* Light blue 
+} */
+
+/* nav {
+  top: 0;
+  position: fixed;
+  width: 100%;
+  display: flex;
+  /* flex-direction: row; */
+  align-items: center;
+  justify-content: space-between;
+  background-color: #0A7029;
+  padding: 10px 20px;
+  height: 50px;
+}
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 50px; /* Added spacing between links */
+}
+nav a {
+  color: white;
+  display: block;
+  text-decoration: none;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Space between user ID and logout button */
+}
+.user-id {
+  /* position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff; */
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
