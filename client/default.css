@@ -30,6 +30,23 @@
     text-decoration: none;
 }
 
+.add-product {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-bottom: 20px;
+    margin-right: 20px;
+}
+
+.add-product-btn {
+    border-radius: 5px;
+    background-color: #00B207;
+    color: #fff;
+    border: none;
+    padding: 5px 10px 5px 10px;
+    margin: 5px;
+}
+
 .sidebar {
     width: 250px;
     padding: 15px;
