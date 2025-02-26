@@ -71,6 +71,14 @@
     width: 18rem;
 }
 
+.card-img-top {
+    border-radius: 5px;
+}
+
+.img-fluid {
+    border-radius: 10px;
+}
+
 .comment-form {
     display: flex; 
 }
