@@ -219,57 +219,7 @@ label {
     color:#0A7029
 }
 
-/*input {
-  width: 100%;
-  padding: 1.5vh;
-  border: 0.2vh solid white; /* Light blue */
-  /*border-radius: 3vh;
-  background-color: white; /* Soft blue */
-  /*color: #0A7029; *//* Dark navy for text */
-  /*font-size: 2vh; */
 
-
-/* Input focus effect */
-/* input:focus {
-  outline: none;
-  border-color: #0A7029; /* Darker blue */
-
-/* Navbar Styling
-.navbar {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  background: #023e8a;
-  padding: 2vh;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nav-link {
-  color: white;
-  font-size: 2vh;
-  text-decoration: none;
-  margin-left: 2vh;
-  font-weight: bold;
-}
-
-.nav-link:hover {
-  color: #CAF0F8; /* Light blue 
-} */
-
-/* /* nav {
-  top: 0;
-  position: fixed;
-  width: 100%;
-  display: flex;
-  /* flex-direction: row; */
-  /* align-items: center;
-  justify-content: space-between;
-  background-color: #0A7029;
-  padding: 10px 20px;
-  height: 50px;
-} */
 nav ul {
   display: flex;
   list-style: none;
