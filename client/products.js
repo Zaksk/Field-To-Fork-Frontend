@@ -13,6 +13,26 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    const productImageInput = document.getElementById("productImage");
+    const imagePreview = document.getElementById("imagePreview");
+
+    productImageInput.addEventListener("change", function (event) {
+        const file = event.target.files[0]; // Get the selected file
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result; // Set preview image source
+                imagePreview.classList.remove("d-none"); // Show preview
+            };
+
+            reader.readAsDataURL(file); // Convert file to Data URL for preview
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
     // Select all product cards (main products + sidebar products)
     const productCards = document.querySelectorAll(".product-card, .popular-product");
 
