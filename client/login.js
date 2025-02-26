@@ -19,7 +19,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     if (response.status === 200) {
         localStorage.setItem("token", data.token)
-        window.location.assign("")
+        window.location.assign("products.html")
     } else {
         alert(data.error);
     }
