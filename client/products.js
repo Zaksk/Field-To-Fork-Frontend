@@ -4,6 +4,15 @@ const productTitle = document.getElementById("productTitle");
 const productDescription = document.getElementById("productDescription");
 
 document.addEventListener("DOMContentLoaded", function () {
+    const addProductBtn = document.querySelector(".add-product-btn");
+    const addProductModal = new bootstrap.Modal(document.getElementById("addProductModal"));
+
+    addProductBtn.addEventListener("click", function () {
+        addProductModal.show();
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
     // Select all product cards (main products + sidebar products)
     const productCards = document.querySelectorAll(".product-card, .popular-product");
 

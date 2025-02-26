@@ -27,7 +27,7 @@
     </div>
 
     <div class="add-product">
-        <button class="add-product-btn">Add new product</button>
+        <button class="add-product-btn btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">Add new product</button>
     </div>
 
     <main class="d-flex">
@@ -90,6 +90,39 @@
                     <form class="comment-form">
                         <input type="textarea" class="comment-textarea">
                         <button type="submit" class="btn btn-outline-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Product Description</label>
+                            <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productImageUrl" class="form-label">Product Image URL</label>
+                            <input type="url" class="form-control" id="productImageUrl" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Price (£)</label>
+                            <input type="number" class="form-control" id="productPrice" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Add Product</button>
                     </form>
                 </div>
             </div>
