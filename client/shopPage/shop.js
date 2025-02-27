@@ -1,3 +1,8 @@
+const productCard = document.getElementById("productCard");
+const productImage = document.getElementById("productImage");
+const productTitle = document.getElementById("productTitle");
+const productDescription = document.getElementById("productDescription");
+
 // Display the card when clicked
 document.addEventListener("DOMContentLoaded", function () {
     // Use event delegation to handle clicks on product cards
