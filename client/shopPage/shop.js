@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // C-- Upload image to Add Product form
 document.addEventListener("DOMContentLoaded", function () {
-    const productImageInput = document.getElementById("productImage");
+    const productImageInput = document.getElementById("product-Image");
     const imagePreview = document.getElementById("imagePreview");
 
     productImageInput.addEventListener("change", function (event) {

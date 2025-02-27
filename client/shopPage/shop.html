@@ -58,13 +58,17 @@
             </div>
         </section>
 
-         <!-- Add Product button -->
-    <div class="add-product">
-        <button class="add-product-btn btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">Add new product</button>
-    </div>
+         
+ 
 
     
         <section class="main-content container">
+            
+            <!-- Add Product button -->
+            <div class="add-product">
+                <button class="add-product-btn btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">Add new product</button>
+            </div>
+
             <div class="row g-4 container" id="productContainer">
                 <div class="col-md-4">
                     <div class="product-card card shadow-sm p-3" data-category="fruits">
@@ -88,7 +92,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="product-card card shadow-sm p-3" data-category="fruits">
-                        <img src="./client/assets/banana.jpg" class="card-img-top product-image" alt="Banana">
+                        <img src="./client/assets/banana.jpg" class="card-img-top productimage" alt="Banana">
                         <div class="card-body">
                             <h4 class="card-title product-title">Banana</h4>
                             <p class="card-text product-description">Sweet and ripe bananas.</p>
@@ -127,5 +131,46 @@
             </div>
         </div>
     </div>
+</body>
+</html>
+
+
+ <!-- Add Product Modal -->
+ <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addProductForm">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="productName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productDescription" class="form-label">Product Description</label>
+                        <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productImageUrl" class="form-label">Product Image URL</label>
+                        <input type="file" class="form-control" id="productImage" accept="image/*" required>
+                    </div>
+                    <div class="mb-3">
+                        <p>Suggested price range to list produce for sale at: </p>
+                        <p id="priceRange"><strong></strong></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Price (£)</label>
+                        <input type="number" class="form-control" id="productPrice" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
