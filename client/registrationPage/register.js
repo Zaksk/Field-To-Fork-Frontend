@@ -2,8 +2,8 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     e.preventDefault()
 
     const form = new FormData(e.target)
-    const password = document.getElementById("password").ariaValueMax;
-    const confirmPassword = document.getElementById("confirmPassword");
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
     if (password !== confirmPassword) {
         alert("Passwords entered do not match!");

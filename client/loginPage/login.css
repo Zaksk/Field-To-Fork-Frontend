@@ -25,6 +25,22 @@ body {
     
 } */
 
+.user-login-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-login-icon i {
+    font-size: 20px;
+    margin-right: 10px;
+    color: #0A7029;
+}
+
+.form-group input {
+    border-radius: 2vh;
+}
+
 .login-btn {
     background-color: #00B207;
     color: #FFFFFF;
