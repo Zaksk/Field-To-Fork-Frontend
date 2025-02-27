@@ -3,6 +3,7 @@ const productImage = document.getElementById("productImage");
 const productTitle = document.getElementById("productTitle");
 const productDescription = document.getElementById("productDescription");
 
+// Add Product form
 document.addEventListener("DOMContentLoaded", function () {
     const addProductBtn = document.querySelector(".add-product-btn");
     const addProductModal = new bootstrap.Modal(document.getElementById("addProductModal"));
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Upload image to Add Product form
 document.addEventListener("DOMContentLoaded", function () {
     const productImageInput = document.getElementById("productImage");
     const imagePreview = document.getElementById("imagePreview");
@@ -32,8 +34,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Show Product Modal
 document.addEventListener("DOMContentLoaded", function () {
-    // Select all product cards (main products + sidebar products)
+    
     const productCards = document.querySelectorAll(".product-card, .popular-product");
 
     productCards.forEach(card => {
