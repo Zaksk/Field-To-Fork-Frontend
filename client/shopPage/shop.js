@@ -71,3 +71,37 @@ $(document).ready(function() {
         filterProducts(searchTerm); // Filter products based on the search term
     });
 });
+
+
+
+
+//C-- Add Product form
+document.addEventListener("DOMContentLoaded", function () {
+    const addProductBtn = document.querySelector(".add-product-btn");
+    const addProductModal = new bootstrap.Modal(document.getElementById("addProductModal"));
+
+    addProductBtn.addEventListener("click", function () {
+        addProductModal.show();
+    });
+});
+
+// C-- Upload image to Add Product form
+document.addEventListener("DOMContentLoaded", function () {
+    const productImageInput = document.getElementById("productImage");
+    const imagePreview = document.getElementById("imagePreview");
+
+    productImageInput.addEventListener("change", function (event) {
+        const file = event.target.files[0]; // Get the selected file
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result; // Set preview image source
+                imagePreview.classList.remove("d-none"); // Show preview
+            };
+
+            reader.readAsDataURL(file); // Convert file to Data URL for preview
+        }
+    });
+});
