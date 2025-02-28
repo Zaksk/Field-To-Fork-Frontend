@@ -3,7 +3,49 @@ const productImage = document.getElementById("productImage");
 const productTitle = document.getElementById("productTitle");
 const productDescription = document.getElementById("productDescription");
 
+document.addEventListener("DOMContentLoaded", () => {
+    const productContainer = document.getElementById("productContainer");
 
+    const apiUrl = "https://field-to-fork-backend.onrender.com/";
+
+    async function fetchProducts() {
+        try {
+            const response = await fetch("https://field-to-fork-backend.onrender.com/");
+            if (!response.ok) {
+                throw new Error("Failed to fetch products");
+            }
+            const products = await response.json();
+            renderProducts(products);
+        } catch {
+            console.log("Error fetching products", error);
+        }
+    }
+
+    function renderProducts(products) {
+        productContainer.innerHTML = "";
+
+        products.forEach(product => {
+            const productCard = document.createElement("div");
+            productCard.classList.add("col-md-4");
+
+            productCard.innerHTML = `
+                <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}">
+                    <img src="${product.image}| class="card-img-top product-image" alt="${product.name}">
+                    <div class="card-body">
+                        <h4 class="card-title product-title">${product.name}</h4>
+                        <p class="card-text product-description">${product.description}</p>
+                        <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
+                        <p class="card-text"><strong>Price: £</strong>${product.price}</p>
+                        <a href="#" class="btn btn-outline-success">See More...</a>
+                    </div>
+                </div>
+            `;
+            productContainer.appendChild(productCard);
+        });
+    }
+
+    // fetchProducts();
+})
 
 // Display the card when clicked
 document.addEventListener("DOMContentLoaded", function () {

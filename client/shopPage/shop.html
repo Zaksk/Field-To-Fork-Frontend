@@ -74,10 +74,9 @@
 
 
 <!-- side bar -->
-    <main class="d-flex">
+    <main class="d-flex main-sidebar">
         <section class="sidebar d-flex flex-column">
-            <button type="button" class="btn btn-outline-success filter-space">Filter</button>
-            <h4 class="text-center">All categories</h4>
+            <h5 class="text-center">Filter by category</h5>
             <div class="filter-container">  
                 <input type="radio" name="product" value="all" id="all" checked/>
                 <label for="all">All</label>
@@ -99,6 +98,7 @@
             </div>
             <!-- Add Postcode Input -->
             <div class="postcode-input mt-3">
+                <h5 class="text-center">See nearest produce</h5>
                 <label for="postcode" class="form-label">Enter your postcode:</label>
                 <input type="text" class="form-control" id="postcode" placeholder="e.g., SW1A 1AA">
                 <button class="btn btn-outline-success mt-2" id="sortByDistance">Sort by Distance</button>
