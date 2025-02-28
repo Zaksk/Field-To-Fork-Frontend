@@ -160,56 +160,74 @@ async function getDistance(targetPostcode, productPostcode) {
 
 
 // jQuery for filtering with radio buttons
-$(document).ready(function() {
+$(document).ready(function () {
+    // Store all product cards in a variable
+    const allProductCards = $(".product-card").clone(); // Clone all product cards for later use
+
     // Function to filter products based on the selected category
     function filterSelection(category) {
-        if (category === 'all') {
-            $('.product-card').show(); // Show all products
+        const productContainer = $("#productContainer");
+        productContainer.empty(); // Clear the container
+
+        if (category === "all") {
+            // Show all products
+            allProductCards.each(function () {
+                const col = $("<div>").addClass("col-md-4"); // Create a new column
+                col.append($(this).clone()); // Append the product card to the column
+                productContainer.append(col); // Add the column to the container
+            });
         } else {
-            $('.product-card').hide(); // Hide all products
-            $('.product-card[data-category="' + category + '"]').show(); // Show products of the selected category
+            // Show only products of the selected category
+            allProductCards.each(function () {
+                if ($(this).attr("data-category") === category) {
+                    const col = $("<div>").addClass("col-md-4"); // Create a new column
+                    col.append($(this).clone()); // Append the product card to the column
+                    productContainer.append(col); // Add the column to the container
+                }
+            });
         }
     }
 
     // Event listener for radio button change
-    $('input[type="radio"][name="product"]').change(function() {
-        let selectedCategory = $(this).val(); // Get the value of the selected radio button
+    $('input[type="radio"][name="product"]').change(function () {
+        const selectedCategory = $(this).val(); // Get the value of the selected radio button
         filterSelection(selectedCategory); // Filter products
     });
 
     // Initial filter to show all products
-    filterSelection('all');
+    filterSelection("all");
 });
 
 
 // Add search functionality
-$(document).ready(function() {
+$(document).ready(function () {
+    // Store all product cards in a variable
+    const allProductCards = $(".product-card").clone(); // Clone all product cards for later use
+
     // Function to filter products based on search input
     function filterProducts(searchTerm) {
+        const productContainer = $("#productContainer");
+        productContainer.empty(); // Clear the container
+
         searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
 
-        $('.product-card').each(function() {
-            let productTitle = $(this).find('.product-title').text().toLowerCase(); // Get the product title
-            let productDescription = $(this).find('.product-description').text().toLowerCase(); // Get the product description
-            // Show or hide the product card based on whether the title matches the search term
-            if (productTitle.includes(searchTerm)) {
-                $(this).show(); // Show the card if the title matches
-            } else {
-                $(this).hide(); // Hide the card if the title does not match
-            }
-            if (productDescription.includes(searchTerm)) {
-                $(this).show(); // Show the card if the description matches
-            }
-            else{
-                $(this).hide(); // Hide the card if the description does not match
+        allProductCards.each(function () {
+            const productTitle = $(this).find(".product-title").text().toLowerCase(); // Get the product title
+            const productDescription = $(this).find(".product-description").text().toLowerCase(); // Get the product description
+
+            // Show the product card if the title or description matches the search term
+            if (productTitle.includes(searchTerm) || productDescription.includes(searchTerm)) {
+                const col = $("<div>").addClass("col-md-4"); // Create a new column
+                col.append($(this).clone()); // Append the product card to the column
+                productContainer.append(col); // Add the column to the container
             }
         });
     }
 
     // Event listener for the search box input
-    $('#searchBox').on('input', function(event) {
+    $("#searchBox").on("input", function (event) {
         event.preventDefault(); // Prevent form submission
-        let searchTerm = $(this).val(); // Get the value of the search box
+        const searchTerm = $(this).val(); // Get the value of the search box
         filterProducts(searchTerm); // Filter products based on the search term
     });
 });
@@ -333,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let cart = [];
 
     addToCartBtn.addEventListener('click', function() {
-        // Get the innerText of the price element
+    // Get the innerText of the price element
     const priceText = document.getElementById('modalProductPrice').innerText; // e.g., "Price: £10.00"
 
     // Remove the "Price: £" part to extract the number
