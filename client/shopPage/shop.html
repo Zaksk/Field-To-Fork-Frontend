@@ -76,10 +76,9 @@
     
 
 <!-- side bar -->
-    <main class="d-flex">
+    <main class="d-flex main-sidebar">
         <section class="sidebar d-flex flex-column">
-            <button type="button" class="btn btn-outline-success filter-space">Filter</button>
-            <h4 class="text-center">All categories</h4>
+            <h5 class="text-center">Filter by category</h5>
             <div class="filter-container">  
                 <input type="radio" name="product" value="all" id="all" checked/>
                 <label for="all">All</label>
@@ -187,8 +186,9 @@
     <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header d-flex justify-content-between">
                     <h5 class="modal-title" id="productModalLabel">Product Details</h5>
+                    <button type="button" class="btn btn-danger">Delete Item</button>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -239,6 +239,7 @@
                         <input type="text" class="form-control" id="productName" required>
                     </div>
                     <div class="mb-3">
+                        <p>Please select the type of produce you are selling:</p>
                         <input type="radio" name="selectOption" value="fruit" id="selectFruit"/>
                         <label for="productCategory" class="form-label">Fruit</label>
                         <input type="radio" name="selectOption" value="vegetable" id="selectVegetable"/>
