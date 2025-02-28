@@ -21,7 +21,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
     const response = await fetch("https://field-to-fork-backend.onrender.com/users/register", options);
     const data = await response.json();
-
+    
     if (response.ok) {
         window.location.assign("../loginPage/login.html");
     } else {
