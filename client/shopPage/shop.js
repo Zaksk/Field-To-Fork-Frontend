@@ -3,6 +3,8 @@ const productImage = document.getElementById("productImage");
 const productTitle = document.getElementById("productTitle");
 const productDescription = document.getElementById("productDescription");
 
+
+
 // Display the card when clicked
 document.addEventListener("DOMContentLoaded", function () {
     // Use event delegation to handle clicks on product cards
@@ -15,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Get data from the clicked product card
             productTitle = productCard.querySelector(".product-title").textContent;
             productDescription = productCard.querySelector(".product-description").textContent;
-            productImage = productCard.querySelector(".product-image").src || "../client/assets/default-product.jpg";
+            productImage = productCard.querySelector(".product-image").src || "../assets/default-product.jpg";
             // Update modal content
             document.getElementById("modalProductTitle").textContent = productTitle;
             document.getElementById("modalProductDescription").textContent = productDescription;
