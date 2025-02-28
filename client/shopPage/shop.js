@@ -190,12 +190,18 @@ $(document).ready(function() {
 
         $('.product-card').each(function() {
             let productTitle = $(this).find('.product-title').text().toLowerCase(); // Get the product title
-
+            let productDescription = $(this).find('.product-description').text().toLowerCase(); // Get the product description
             // Show or hide the product card based on whether the title matches the search term
             if (productTitle.includes(searchTerm)) {
                 $(this).show(); // Show the card if the title matches
             } else {
                 $(this).hide(); // Hide the card if the title does not match
+            }
+            if (productDescription.includes(searchTerm)) {
+                $(this).show(); // Show the card if the description matches
+            }
+            else{
+                $(this).hide(); // Hide the card if the description does not match
             }
         });
     }
