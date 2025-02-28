@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchProducts() {
         try {
-            const response = await fetch("https://field-to-fork-backend.onrender.com/");
+            const response = await fetch("https://field-to-fork-backend.onrender.com/products/");
             if (!response.ok) {
                 throw new Error("Failed to fetch products");
             }
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // fetchProducts();
+    fetchProducts();
 })
 
 // Display the card when clicked
