@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
 // jQuery for filtering with radio buttons
 $(document).ready(function() {
     // Function to filter products based on the selected category
@@ -51,6 +52,7 @@ $(document).ready(function() {
     // Initial filter to show all products
     filterSelection('all');
 });
+
 
 // Add search functionality
 $(document).ready(function() {
