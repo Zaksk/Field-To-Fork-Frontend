@@ -109,3 +109,101 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+
+// Function to get coordinates (latitude and longitude) for a given postcode
+async function getCoordinates(postcode) {
+    const response = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
+    const data = await response.json();
+    if (data.status === 200) {
+        return {
+            latitude: data.result.latitude,
+            longitude: data.result.longitude,
+        };
+    } else {
+        throw new Error(`Postcode ${postcode} not found.`);
+    }
+}
+
+// Haversine formula to calculate the distance between two coordinates
+function haversine(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const toRad = (angle) => (angle * Math.PI) / 180; // Function to convert degrees to radians
+
+    const φ1 = toRad(lat1);
+    const φ2 = toRad(lat2);
+    const Δφ = toRad(lat2 - lat1);
+    const Δλ = toRad(lon2 - lon1);
+
+    const a =
+        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distanceInKm = R * c; // Distance in kilometers
+    const distanceInMiles = distanceInKm * 0.621371; // Convert kilometers to miles
+    return distanceInMiles;
+}
+
+// Function to get the distance between the postcodes
+async function getDistance(targetPostcode, productPostcode) {
+    try {
+        const coordsTarget = await getCoordinates(targetPostcode);
+        const coordsProduct = await getCoordinates(productPostcode);
+        const distance = haversine(
+            coordsTarget.latitude,
+            coordsTarget.longitude,
+            coordsProduct.latitude,
+            coordsProduct.longitude
+        );
+        return distance; // Return the calculated distance
+    } catch (error) {
+        console.error(error.message);
+        return null; // Return null in case of error
+    }
+}
+
+// Function to sort products by distance and update the UI
+async function sortProductsByDistance(userPostcode) {
+    try {
+        const productCards = document.querySelectorAll(".product-card");
+
+        // Calculate distances for all products
+        for (const card of productCards) {
+            const productPostcode = card.dataset.postcode;
+            const distance = await getDistance(userPostcode, productPostcode);
+
+            // Update the distance on the product card
+            const distanceElement = card.querySelector(".distance-value");
+            if (distanceElement) {
+                distanceElement.textContent = `${distance.toFixed(2)} miles`;
+            }
+
+            // Store the distance in a data attribute for sorting
+            card.dataset.distance = distance;
+        }
+
+        // Sort products by distance
+        const sortedCards = Array.from(productCards).sort((a, b) => {
+            return a.dataset.distance - b.dataset.distance;
+        });
+
+        // Re-append sorted products to the container
+        const productContainer = document.getElementById("productContainer");
+        productContainer.innerHTML = ""; // Clear the container
+        sortedCards.forEach((card) => productContainer.appendChild(card));
+    } catch (error) {
+        console.error("Error sorting products by distance:", error);
+        alert("Invalid postcode or API error. Please try again.");
+    }
+}
+
+// Event listener for the "Sort by Distance" button
+document.getElementById("sortByDistance").addEventListener("click", function () {
+    const userPostcode = document.getElementById("postcode").value.trim();
+    if (userPostcode) {
+        sortProductsByDistance(userPostcode);
+    } else {
+        alert("Please enter a valid postcode.");
+    }
+});

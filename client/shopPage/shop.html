@@ -23,7 +23,7 @@
                 <button>Search</button>
             </div>
             <div class="cart-info">
-                <!-- <i class='bx bx-heart' ></i> -->
+                <!- <i class='bx bx-heart' ></i> -->
                 <!-- <span>Shopping cart: <strong>£10.00</strong></span>
                 <i class='bx bx-shopping-bag'></i>
             </div>
@@ -69,7 +69,21 @@
                 <br>
                 <input type="radio" name="product" value="vegetables" id="vegetables"/>
                 <label for="vegetables">Vegetables</label>
+                <br>
+                <input type="radio" name="product" value="Pot plants" id="potPlants"/>
+                <label for="potPlants">Pot plants</label>
+                <br>
+                <input type="radio" name="product" value="Cut Flowers" id="cutFlowers"/>
+                <label for="cutFlowers">Cut flowers</label>
             </div>
+
+            <!-- Add Postcode Input -->
+    <div class="postcode-input mt-3">
+        <label for="postcode" class="form-label">Enter your postcode:</label>
+        <input type="text" class="form-control" id="postcode" placeholder="e.g., SW1A 1AA">
+        <button class="btn btn-outline-success mt-2" id="sortByDistance">Sort by Distance</button>
+    </div>
+
         </section>
 
          
@@ -84,29 +98,33 @@
             </div>
 
             <div class="row g-4 container" id="productContainer">
+
+
                 <div class="col-md-4">
-                    <div class="product-card card shadow-sm p-3" data-category="fruits">
+                    <div class="product-card card shadow-sm p-3" data-category="fruits" data-postcode="SW1A 1AA">
                         <img src="./client/assets/apple.jpg" class="card-img-top product-image" alt="Apple">
                         <div class="card-body">
                             <h4 class="card-title product-title">Apple</h4>
                             <p class="card-text product-description">Fresh and juicy apples.</p>
+                            <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
                             <a href="#" class="btn btn-outline-success">See More...</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="product-card card shadow-sm p-3" data-category="vegetables">
+                    <div class="product-card card shadow-sm p-3" data-category="vegetables" data-postcode="EC1A 1BB">
                         <img src="./client/assets/carrot.jpg" class="card-img-top product-image" alt="Carrot">
                         <div class="card-body">
                             <h4 class="card-title product-title">Carrot</h4>
                             <p class="card-text product-description">Fresh and crunchy carrots.</p>
+                            <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
                             <a href="#" class="btn btn-outline-success">See More...</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="product-card card shadow-sm p-3" data-category="fruits">
-                        <img src="./client/assets/banana.jpg" class="card-img-top product-image" alt="Banana">
+                    <div class="product-card card shadow-sm p-3" data-category="fruits" data-postcode="NW1 3LH">
+                        <img src="./client/assets/banana.jpg" class="card-img-top product-image" alt="Banana" >
                         <div class="card-body">
                             <h4 class="card-title product-title">Banana</h4>
                             <p class="card-text product-description">Sweet and ripe bananas.</p>
@@ -114,6 +132,32 @@
                         </div>
                     </div>
                 </div>
+
+
+                <!-- Pot Plant -->
+    <div class="col-md-4">
+        <div class="product-card card shadow-sm p-3" data-category="potplants" data-postcode="W1A 1AB">
+            <img src="./client/assets/pot-plant.jpg" class="card-img-top product-image" alt="Pot Plant">
+            <div class="card-body">
+                <h4 class="card-title product-title">Pot Plant</h4>
+                <p class="card-text product-description">Beautiful indoor pot plants to brighten your home.</p>
+                <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
+                <a href="#" class="btn btn-outline-success">See More...</a>
+            </div>
+        </div>
+    </div>
+    <!-- Cut Flowers -->
+    <div class="col-md-4">
+        <div class="product-card card shadow-sm p-3" data-category="cutflowers" data-postcode="WC2N 5DU">
+            <img src="./client/assets/cut-flowers.jpg" class="card-img-top product-image" alt="Cut Flowers">
+            <div class="card-body">
+                <h4 class="card-title product-title">Cut Flowers</h4>
+                <p class="card-text product-description">Fresh and vibrant cut flowers for any occasion.</p>
+                <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
+                <a href="#" class="btn btn-outline-success">See More...</a>
+            </div>
+        </div>
+    </div>
             </div>
         </section>
     </main>
