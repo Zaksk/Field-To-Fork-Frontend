@@ -278,3 +278,79 @@ document.getElementById("postcode").addEventListener("input", function () {
         resetProductCards();
     }
 });
+
+//shopping cart
+
+document.addEventListener('DOMContentLoaded', function() {
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const quantityInput = document.getElementById('quantity');
+    const cartItemsContainer = document.getElementById('item');
+    const cartTotalElement = document.getElementById('cartTotal');
+    const notification = document.getElementById('notification');
+
+    let cart = [];
+
+    addToCartBtn.addEventListener('click', function() {
+        // Get the innerText of the price element
+    const priceText = document.getElementById('modalProductPrice').innerText; // e.g., "Price: £10.00"
+
+    // Remove the "Price: £" part to extract the number
+    const priceValue = parseFloat(priceText.replace('Price: £', '')); // Extracts "10.00" and converts to number
+    
+        // Create the product object
+        const product = {
+        title: document.getElementById('modalProductTitle').innerText,
+        variety: document.getElementById('modalProductVariety').innerText,
+        price: priceValue, // Use the extracted numeric value
+        quantity: parseInt(quantityInput.value),
+        image: document.getElementById('modalProductImage').src
+    };
+
+        // Check if the product is already in the cart
+        const existingProductIndex = cart.findIndex(item => item.title === product.title && item.variety === product.variety);
+
+        if (existingProductIndex !== -1) {
+            // Update the quantity if the product is already in the cart
+            cart[existingProductIndex].quantity += product.quantity;
+        } else {
+            // Add the product to the cart if it's not already there
+            cart.push(product);
+        }
+
+        updateCartDisplay();
+
+        // Show notification
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000); // Hide notification after 3 seconds
+
+        // Open the offcanvas shopping cart
+        // const offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasRight'));
+        // offcanvas.show();
+    });
+
+    function updateCartDisplay() {
+        cartItemsContainer.innerHTML = ''; // Clear the current cart display
+        let total = 0;
+
+        cart.forEach(item => {
+            const cartItem = document.createElement('div');
+            cartItem.className = 'cart-item';
+            cartItem.innerHTML = `
+                <img src="${item.image}" alt="${item.title}" width="50">
+                <div>
+                    <h6>${item.title} - ${item.variety}</h6>
+                    <p>£${item.price.toFixed(2)} x ${item.quantity}</p>
+                </div>
+            `;
+            cartItemsContainer.appendChild(cartItem);
+
+            // Calculate the total price
+            total += item.price * item.quantity;
+        });
+
+        // Update the total price
+        cartTotalElement.innerText = total.toFixed(2);
+    }
+});
