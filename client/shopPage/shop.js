@@ -73,58 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// jQuery for filtering with radio buttons
-$(document).ready(function() {
-    // Function to filter products based on the selected category
-    function filterSelection(category) {
-        if (category === 'all') {
-            $('.product-card').show(); // Show all products
-        } else {
-            $('.product-card').hide(); // Hide all products
-            $('.product-card[data-category="' + category + '"]').show(); // Show products of the selected category
-        }
-    }
-
-    // Event listener for radio button change
-    $('input[type="radio"][name="product"]').change(function() {
-        let selectedCategory = $(this).val(); // Get the value of the selected radio button
-        filterSelection(selectedCategory); // Filter products
-    });
-
-    // Initial filter to show all products
-    filterSelection('all');
-});
-
-
-// Add search functionality
-$(document).ready(function() {
-    // Function to filter products based on search input
-    function filterProducts(searchTerm) {
-        searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
-
-        $('.product-card').each(function() {
-            let productTitle = $(this).find('.product-title').text().toLowerCase(); // Get the product title
-
-            // Show or hide the product card based on whether the title matches the search term
-            if (productTitle.includes(searchTerm)) {
-                $(this).show(); // Show the card if the title matches
-            } else {
-                $(this).hide(); // Hide the card if the title does not match
-            }
-        });
-    }
-
-    // Event listener for the search box input
-    $('#searchBox').on('input', function(event) {
-        event.preventDefault(); // Prevent form submission
-        let searchTerm = $(this).val(); // Get the value of the search box
-        filterProducts(searchTerm); // Filter products based on the search term
-    });
-});
-
-
-
-
 //C-- Add Product form
 document.addEventListener("DOMContentLoaded", function () {
     const addProductBtn = document.querySelector(".add-product-btn");
@@ -209,10 +157,64 @@ async function getDistance(targetPostcode, productPostcode) {
     }
 }
 
+
+
+// jQuery for filtering with radio buttons
+$(document).ready(function() {
+    // Function to filter products based on the selected category
+    function filterSelection(category) {
+        if (category === 'all') {
+            $('.product-card').show(); // Show all products
+        } else {
+            $('.product-card').hide(); // Hide all products
+            $('.product-card[data-category="' + category + '"]').show(); // Show products of the selected category
+        }
+    }
+
+    // Event listener for radio button change
+    $('input[type="radio"][name="product"]').change(function() {
+        let selectedCategory = $(this).val(); // Get the value of the selected radio button
+        filterSelection(selectedCategory); // Filter products
+    });
+
+    // Initial filter to show all products
+    filterSelection('all');
+});
+
+
+// Add search functionality
+$(document).ready(function() {
+    // Function to filter products based on search input
+    function filterProducts(searchTerm) {
+        searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
+
+        $('.product-card').each(function() {
+            let productTitle = $(this).find('.product-title').text().toLowerCase(); // Get the product title
+
+            // Show or hide the product card based on whether the title matches the search term
+            if (productTitle.includes(searchTerm)) {
+                $(this).show(); // Show the card if the title matches
+            } else {
+                $(this).hide(); // Hide the card if the title does not match
+            }
+        });
+    }
+
+    // Event listener for the search box input
+    $('#searchBox').on('input', function(event) {
+        event.preventDefault(); // Prevent form submission
+        let searchTerm = $(this).val(); // Get the value of the search box
+        filterProducts(searchTerm); // Filter products based on the search term
+    });
+});
+
+
+
 // Function to sort products by distance and update the UI
 async function sortProductsByDistance(userPostcode) {
     try {
         const productCards = document.querySelectorAll(".product-card");
+        const productContainer = document.getElementById("productContainer");
 
         // Calculate distances for all products
         for (const card of productCards) {
@@ -234,23 +236,81 @@ async function sortProductsByDistance(userPostcode) {
             return a.dataset.distance - b.dataset.distance;
         });
 
-        // Re-append sorted products to the container
-        const productContainer = document.getElementById("productContainer");
-        productContainer.innerHTML = ""; // Clear the container
-        sortedCards.forEach((card) => productContainer.appendChild(card));
+        // Clear the container before appending sorted cards
+        productContainer.innerHTML = "";
+
+        // Create a new row for every 3 cards
+        let row;
+        sortedCards.forEach((card, index) => {
+            if (index % 3 === 0) {
+                // Create a new row for every 3 cards
+                row = document.createElement("div");
+                row.className = "row g-4";
+                productContainer.appendChild(row);
+            }
+
+            // Create a column for the card
+            const col = document.createElement("div");
+            col.className = "col-md-4";
+            col.appendChild(card);
+            row.appendChild(col);
+        });
     } catch (error) {
         console.error("Error sorting products by distance:", error);
         alert("Invalid postcode or API error. Please try again.");
     }
 }
 
+// Function to reset product cards to their original unordered state
+function resetProductCards() {
+    const productContainer = document.getElementById("productContainer");
+    const productCards = document.querySelectorAll(".product-card");
+
+    // Clear the container before appending original cards
+    productContainer.innerHTML = "";
+
+    // Create a new row for every 3 cards
+    let row;
+    productCards.forEach((card, index) => {
+        if (index % 3 === 0) {
+            // Create a new row for every 3 cards
+            row = document.createElement("div");
+            row.className = "row g-4";
+            productContainer.appendChild(row);
+        }
+
+        // Create a column for the card
+        const col = document.createElement("div");
+        col.className = "col-md-4";
+        col.appendChild(card);
+        row.appendChild(col);
+    });
+
+    // Clear the distance values on the product cards
+    productCards.forEach((card) => {
+        const distanceElement = card.querySelector(".distance-value");
+        if (distanceElement) {
+            distanceElement.textContent = "N/A"; // Reset distance value
+        }
+    });
+}
+
 // Event listener for the "Sort by Distance" button
 document.getElementById("sortByDistance").addEventListener("click", function () {
-    
     const userPostcode = document.getElementById("postcode").value.trim();
     if (userPostcode) {
         sortProductsByDistance(userPostcode);
     } else {
-        alert("Please enter a valid postcode.");
+        // If the postcode input is empty, reset the product cards
+        resetProductCards();
+    }
+});
+
+// Event listener for the postcode input field
+document.getElementById("postcode").addEventListener("input", function () {
+    const userPostcode = this.value.trim();
+    if (!userPostcode) {
+        // If the postcode input is cleared, reset the product cards
+        resetProductCards();
     }
 });
