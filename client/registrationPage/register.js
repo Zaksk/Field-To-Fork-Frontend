@@ -1,15 +1,9 @@
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const form = new FormData(e.target)
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+    const form = new FormData(e.target);
 
-    if (password !== confirmPassword) {
-        alert("Passwords entered do not match!");
-        return;
-    }
-
+    
     const options = {
         method: "POST",
         headers: {
@@ -17,18 +11,24 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            username: form.get("fullname"),
+            name: form.get("fullname"),
+            username: form.get("username"),
             email: form.get("email"),
-            password: password
+            postcode: form.get("postcode"),
+            password_hash: form.get("password")
         })
-    }
+    };
 
-    const response = await fetch("", options);
-    const data = await response.json()
+    const response = await fetch("https://field-to-fork-backend.onrender.com/users/register", options);
+    const data = await response.json();
 
-    if (response.status == 201) {
-        window.location.assign("./loginPage/login.html");
+    if (response.ok) {
+        window.location.assign("login.html");
     } else {
         alert(data.error);
     }
-})
+
+
+
+    
+});
