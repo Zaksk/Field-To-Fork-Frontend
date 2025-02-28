@@ -47,6 +47,7 @@
     background-image: url(../assets/a-beta-background.jpg) ;
     background-size: cover;
     background-position:center;
+    margin-bottom: 10px;
     
   }
   .search-bar button{
