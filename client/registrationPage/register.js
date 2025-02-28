@@ -23,7 +23,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const data = await response.json();
 
     if (response.ok) {
-        window.location.assign("login.html");
+        window.location.assign("../loginPage/login.html");
     } else {
         alert(data.error);
     }

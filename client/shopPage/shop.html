@@ -51,9 +51,13 @@
 
     <div class="banner"></div>
     
+    <!-- Add new product & Home & Shopping cart Button-->
     <div class="d-flex justify-content-between" style="padding: 10px">
         <div class="add-product">
             <button class="add-product-btn btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">Add new product</button>
+        </div>
+        <div class="home-btn">
+            <a href="shop.html" class="btn btn-success">Home</a>
         </div>
         <button class="btn btn-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Shopping cart</button>
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
@@ -68,7 +72,6 @@
         </div>
     </div>
 
-    
 
 <!-- side bar -->
     <main class="d-flex">
@@ -86,23 +89,23 @@
                 <label for="vegetables">Vegetables</label>
                 <br>
                 <input type="radio" name="product" value="Pot plants" id="potPlants"/>
-                <label for="potPlants">Pot plants</label>
+                <label for="potPlants">Pot Plants</label>
                 <br>
                 <input type="radio" name="product" value="Cut Flowers" id="cutFlowers"/>
-                <label for="cutFlowers">Cut flowers</label>
+                <label for="cutFlowers">Cut Flowers</label>
+                <br>
+                <input type="radio" name="product" value="Other" id="other"/>
+                <label for="other">Other</label>
             </div>
-
             <!-- Add Postcode Input -->
-    <div class="postcode-input mt-3">
-        <label for="postcode" class="form-label">Enter your postcode:</label>
-        <input type="text" class="form-control" id="postcode" placeholder="e.g., SW1A 1AA">
-        <button class="btn btn-outline-success mt-2" id="sortByDistance">Sort by Distance</button>
-    </div>
-
+            <div class="postcode-input mt-3">
+                <label for="postcode" class="form-label">Enter your postcode:</label>
+                <input type="text" class="form-control" id="postcode" placeholder="e.g., SW1A 1AA">
+                <button class="btn btn-outline-success mt-2" id="sortByDistance">Sort by Distance</button>
+            </div>
         </section>
     
         <section class="main-content container">
-            
             <!-- Add Product button -->
             <div class="row g-4 container" id="productContainer">
                 <div class="col-md-4" id="productCard">

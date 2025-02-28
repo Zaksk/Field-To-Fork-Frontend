@@ -15,12 +15,12 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         })
     }
 
-    const response = await fetch("", options);
+    const response = await fetch("https://field-to-fork-backend.onrender.com/login", options);
     const data = await response.json();
 
     if (response.status == 200) {
         localStorage.setItem("token", data.token)
-        window.location.assign("./shopPage/shop.html")
+        window.location.assign("../shopPage/shop.html")
     } else {
         alert(data.error);
     }

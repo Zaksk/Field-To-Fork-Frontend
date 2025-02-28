@@ -44,7 +44,7 @@ $(document).ready(function() {
 
     // Event listener for radio button change
     $('input[type="radio"][name="product"]').change(function() {
-        var selectedCategory = $(this).val(); // Get the value of the selected radio button
+        let selectedCategory = $(this).val(); // Get the value of the selected radio button
         filterSelection(selectedCategory); // Filter products
     });
 
@@ -59,7 +59,7 @@ $(document).ready(function() {
         searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
 
         $('.product-card').each(function() {
-            var productTitle = $(this).find('.product-title').text().toLowerCase(); // Get the product title
+            let productTitle = $(this).find('.product-title').text().toLowerCase(); // Get the product title
 
             // Show or hide the product card based on whether the title matches the search term
             if (productTitle.includes(searchTerm)) {
@@ -73,7 +73,7 @@ $(document).ready(function() {
     // Event listener for the search box input
     $('#searchBox').on('input', function(event) {
         event.preventDefault(); // Prevent form submission
-        var searchTerm = $(this).val(); // Get the value of the search box
+        let searchTerm = $(this).val(); // Get the value of the search box
         filterProducts(searchTerm); // Filter products based on the search term
     });
 });
@@ -202,6 +202,7 @@ async function sortProductsByDistance(userPostcode) {
 
 // Event listener for the "Sort by Distance" button
 document.getElementById("sortByDistance").addEventListener("click", function () {
+    
     const userPostcode = document.getElementById("postcode").value.trim();
     if (userPostcode) {
         sortProductsByDistance(userPostcode);
