@@ -74,13 +74,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 //C-- Add Product form
-document.addEventListener("DOMContentLoaded", function () {
-    const addProductBtn = document.querySelector(".add-product-btn");
-    const addProductModal = new bootstrap.Modal(document.getElementById("addProductModal"));
+document.getElementById("addProductForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    addProductBtn.addEventListener("click", function () {
-        addProductModal.show();
-    });
+    const form = new FormData(e.target);
+
+    // Assuming user_id is stored in localStorage after login
+    const user_id = localStorage.getItem("user_id");
+
+    // Generate a random type_id (can be a random number or string)
+    const type_id = Math.floor(Math.random() * 1000000);  // Random type_id as a number
+
+    // Get the selected category for the product (variety)
+    const category = form.get("productCategory");
+
+    const productData = {
+        user_id: user_id,
+        type_id: type_id,  // Randomly generated type_id
+        variety: category,  // Selected category (e.g., "fruit", "vegetable", etc.)
+        description: form.get("productDescription"),  // Product description
+        image_url: form.get("productImage"),  // Image URL (or path)
+        price: parseFloat(form.get("productPrice")),  // Price (converted to float)
+        postcode: form.get("productPostcode")  // Location (Postcode)
+    };
+
+    const options = {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(productData)
+    };
+
+    try {
+        const response = await fetch("https://your-backend-url/products/", options);
+        const data = await response.json();
+
+        if (response.ok) {
+            // Successfully added product, close modal and refresh product list
+            window.location.reload();  // This can be modified to fetch and display the updated products dynamically
+        } else {
+            alert(data.error);  // Show any errors from the backend
+        }
+    } catch (error) {
+        console.error("Error adding product:", error);
+        alert("There was an error adding the product. Please try again.");
+    }
 });
 
 // C-- Upload image to Add Product form
@@ -413,4 +453,4 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update the total price
         cartTotalElement.innerText = total.toFixed(2);
     }
-});
+}); 

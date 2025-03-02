@@ -240,7 +240,7 @@
 
 
  <!-- Add Product Modal -->
- <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -249,49 +249,62 @@
             </div>
             <div class="modal-body">
                 <form id="addProductForm">
+                    <!-- Product Name (variety) -->
                     <div class="mb-3">
                         <label for="productName" class="form-label">Product Name</label>
-                        <input type="text" class="form-control" id="productName" required>
+                        <input type="text" class="form-control" id="productName" name="productName" required>
                     </div>
+                    
+                    <!-- Product Category -->
                     <div class="mb-3">
                         <p>Please select the type of produce you are selling:</p>
-                        <input type="radio" name="selectOption" value="fruit" id="selectFruit"/>
-                        <label for="productCategory" class="form-label">Fruit</label>
-                        <input type="radio" name="selectOption" value="vegetable" id="selectVegetable"/>
-                        <label for="productCategory" class="form-label">Vegetable</label>
-                        <input type="radio" name="selectOption" value="potplants" id="selectPotPlant"/>
-                        <label for="productCategory" class="form-label">Potted plant</label>
-                        <input type="radio" name="selectOption" value="cutflowers" id="selectCutFlowers"/>
-                        <label for="productCategory" class="form-label">Cut flowers</label>
-                        <input type="radio" name="selectOption" value="other" id="selectOther"/>
-                        <label for="productCategory" class="form-label">Other</label>
+                        <input type="radio" name="productCategory" value="fruit" id="selectFruit" />
+                        <label for="selectFruit" class="form-label">Fruit</label>
+                        
+                        <input type="radio" name="productCategory" value="vegetable" id="selectVegetable" />
+                        <label for="selectVegetable" class="form-label">Vegetable</label>
+
+                        <input type="radio" name="productCategory" value="potplants" id="selectPotPlant" />
+                        <label for="selectPotPlant" class="form-label">Potted plant</label>
+
+                        <input type="radio" name="productCategory" value="cutflowers" id="selectCutFlowers" />
+                        <label for="selectCutFlowers" class="form-label">Cut flowers</label>
+
+                        <input type="radio" name="productCategory" value="other" id="selectOther" />
+                        <label for="selectOther" class="form-label">Other</label>
                     </div>
+
+                    <!-- Product Description -->
                     <div class="mb-3">
                         <label for="productDescription" class="form-label">Product Description</label>
-                        <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                        <textarea class="form-control" id="productDescription" name="productDescription" rows="3" required></textarea>
                     </div>
+
+                    <!-- Product Image -->
                     <div class="mb-3">
-                        <label for="productImageUrl" class="form-label">Product Image URL</label>
-                        <input type="file" class="form-control" id="productImage" accept="image/*" required>
+                        <label for="productImage" class="form-label">Product Image URL</label>
+                        <input type="file" class="form-control" id="productImage" name="productImage" accept="image/*" required>
                     </div>
+
+                    <!-- Product Location (Postcode) -->
                     <div class="mb-3">
-                        <label for="proudctLocation" class="form-label">Location of available product (Enter your postcode)</label>
-                        <input type="text" class="form-control" id="productPostcode" required>
+                        <label for="productPostcode" class="form-label">Location (Postcode)</label>
+                        <input type="text" class="form-control" id="productPostcode" name="productPostcode" required>
                     </div>
-                    <div class="mb-3">
-                        <p>Suggested price range to list produce for sale at: </p>
-                        <p id="priceRange"><strong></strong></p>
-                    </div>
+
+                    <!-- Product Price -->
                     <div class="mb-3">
                         <label for="productPrice" class="form-label">Price (£)</label>
-                        <input type="number" class="form-control" id="productPrice" required>
+                        <input type="number" class="form-control" id="productPrice" name="productPrice" required>
                     </div>
+
                     <button type="submit" class="btn btn-success">Add Product</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 </body>
 </html>
