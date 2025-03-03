@@ -11,11 +11,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchProducts() {
         try {
-            const response = await fetch("https://field-to-fork-backend.onrender.com/products/");
+            const token = localStorage.getItem("token")
+            const response = await fetch(
+              "https://field-to-fork-backend.onrender.com/products/",
+              {
+                method: "GET",
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
             if (!response.ok) {
                 throw new Error("Failed to fetch products");
             }
             const products = await response.json();
+            console.log("products fetched from api ", products[0]);
             renderProducts(products);
         } catch (error) {
             console.log("Error fetching products", error);
@@ -31,12 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             productCard.innerHTML = `
                 <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}">
-                    <img src="${product.image}| class="card-img-top product-image" alt="${product.name}">
+                    <img src="${product.product.image_url}| class="card-img-top product-image" alt="${product.type}">
                     <div class="card-body">
-                        <h4 class="card-title product-title">${product.name}</h4>
-                        <p class="card-text product-description">${product.description}</p>
+                        <h4 class="card-title product-title">${product.type}</h4>
+                        <p class="card-text product-description">${product.product.description}</p>
                         <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
-                        <p class="card-text"><strong>Price: £</strong>${product.price}</p>
+                        <p class="card-text"><strong>Price: £</strong>${product.product.price}</p>
                         <a href="#" class="btn btn-outline-success">See More...</a>
                     </div>
                 </div>
