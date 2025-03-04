@@ -1,4 +1,6 @@
-
+#dataBtn {
+  margin-left: 150px;
+}
 
 .filter-btn{
   background-color: #0A7029;
@@ -55,16 +57,12 @@
     background-size: cover;
     background-position:center;
     margin-bottom: 10px;
-    
   }
-  .search-bar button{
-    color:white;
-    background-color: #0A7029;
-    border: none;
-    border-radius: 4px;
-    padding: 5px 10px;
-  
+
+  .product-id {
+    display: none;
   }
+
   nav {
     width: 100%;
     display: flex;

@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <h4 class="card-title product-title">${product.type}</h4>
                         <p class="card-text product-id">id:${product.product.product_id}<p>
                         <p class="card-text product-description">${product.product.description}</p>
-                        <p class="card-texr product-postcode">${product.postcode}<p>
+                        <p class="card-texr product-postcode"><strong>Location: </strong>${product.postcode}<p>
                         <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
                         <p class="card-text product-price"><strong>Price: £</strong>${product.product.price}</p>
                         <a href="#" class="btn btn-outline-success">See More...</a>
