@@ -342,8 +342,6 @@ async function getDistance(targetPostcode, productPostcode) {
 
 // jQuery for filtering with radio buttons
 $(document).ready(function () {
-    // Store all product cards in a variable
-    const allProductCards = $(".product-card").clone(); // Clone all product cards for later use
 
     // Function to filter products based on the selected category
     function filterSelection(category) {
@@ -383,26 +381,19 @@ $(document).ready(function () {
 // Add search functionality
 $(document).ready(function () {
     // Store all product cards in a variable
-    const allProductCards = $(".product-card").clone(); // Clone all product cards for later use
+    
+    let allProducts = []
 
-    // Function to filter products based on search input
+      // Function to filter products based on search input
     function filterProducts(searchTerm) {
-        const productContainer = $("#productContainer");
-        productContainer.empty(); // Clear the container
-
         searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
 
-        allProductCards.each(function () {
-            const productTitle = $(this).find(".product-title").text().toLowerCase(); // Get the product title
-            const productDescription = $(this).find(".product-description").text().toLowerCase(); // Get the product description
+        const filteredProducts = allProducts.filter(product =>
+            product.name.toLowerCase().includes(searchTerm) ||
+            product.description.toLowerCase().includes(searchTerm)
+        );
 
-            // Show the product card if the title or description matches the search term
-            if (productTitle.includes(searchTerm) || productDescription.includes(searchTerm)) {
-                const col = $("<div>").addClass("col-md-4"); // Create a new column
-                col.append($(this).clone()); // Append the product card to the column
-                productContainer.append(col); // Add the column to the container
-            }
-        });
+        renderProducts(filteredProducts); // Re-render with filtered results
     }
 
     // Event listener for the search box input
