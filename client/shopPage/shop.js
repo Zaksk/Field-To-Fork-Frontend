@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchProducts() {
         try {
-            const token = localStorage.getItem("token"); //hello
+            const token = localStorage.getItem("token"); //hello from Zak
             const response = await fetch(apiUrl, {
                 method: "GET",
                 headers: {
