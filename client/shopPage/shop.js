@@ -97,7 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const response = await fetch("https://field-to-fork-backend.onrender.com/products/", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": token
                 },
                 body: JSON.stringify(newProduct)
             });
