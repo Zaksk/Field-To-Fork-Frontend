@@ -178,23 +178,26 @@
             </div>
             <div class="modal-body">
                 <form id="addProductForm">
+                    
                     <div class="mb-3">
-                        <label for="productName" class="form-label">Product Name</label>
-                        <input type="text" class="form-control" id="productName" required>
+                        <label for="categoryDropdown" class="form-label">Select a Category</label>
+                        <select class="form-control" id="categoryDropdown" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="fruit" data-id="1">Fruit</option>
+                            <option value="vegetable" data-id="2">Vegetable</option>
+                            <option value="potplants" data-id="3">Potted plant</option>
+                            <option value="cutflowers" data-id="4">Cut flowers</option>
+                            <option value="other" data-id="5">Other</option>
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <p>Please select the type of produce you are selling:</p>
-                        <input type="radio" name="selectOption" value="fruit" id="selectFruit"/>
-                        <label for="productCategory" class="form-label">Fruit</label>
-                        <input type="radio" name="selectOption" value="vegetable" id="selectVegetable"/>
-                        <label for="productCategory" class="form-label">Vegetable</label>
-                        <input type="radio" name="selectOption" value="potplants" id="selectPotPlant"/>
-                        <label for="productCategory" class="form-label">Potted plant</label>
-                        <input type="radio" name="selectOption" value="cutflowers" id="selectCutFlowers"/>
-                        <label for="productCategory" class="form-label">Cut flowers</label>
-                        <input type="radio" name="selectOption" value="other" id="selectOther"/>
-                        <label for="productCategory" class="form-label">Other</label>
+                        <label for="productType" class="form-label">Product Type</label>
+                        <select class="form-control" id="typeDropdown" required>
+                            <option value="" disabled selected>Select a type</option>
+                        </select>
                     </div>
+
+
                     <div class="mb-3">
                         <label for="productDescription" class="form-label">Product Description</label>
                         <textarea class="form-control" id="productDescription" rows="3" required></textarea>
