@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <p class="card-text product-id">id:${product.product.product_id}<p>
                         <p class="card-text product-description">${product.product.description}</p>
                         <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
-                        <p class="card-text"><strong>Price: £</strong>${product.product.price}</p>
+                        <p class="card-text product-price"><strong>Price: £</strong>${product.product.price}</p>
                         <a href="#" class="btn btn-outline-success">See More...</a>
                     </div>
                 </div>
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Check if the clicked element or its parent is a product card
       const productCard = event.target.closest(".product-card");
       if (productCard) {
-        let productTitle, productDescription, productImage;
+        let productTitle, productDescription, productImage, productPrice;
 
         // Get data from the clicked product card
         productTitle = productCard.querySelector(".product-title").textContent;
@@ -289,6 +289,9 @@ document.addEventListener("DOMContentLoaded", function () {
           productCard.querySelector(".product-image").src ||
           "../assets/default-product.jpg";
 
+        productPrice = productCard.querySelector(".product-price").textContent
+        console.log("Product price", productPrice);
+
         // Get product ID from the card
         productId = parseInt(
           productCard
@@ -297,13 +300,11 @@ document.addEventListener("DOMContentLoaded", function () {
             .trim()
         );
 
-        console.log("Selected Product ID:", productId);
-
         // Update modal content
         document.getElementById("modalProductTitle").textContent = productTitle;
-        document.getElementById("modalProductDescription").textContent =
-          productDescription;
+        document.getElementById("modalProductDescription").textContent = productDescription;
         document.getElementById("modalProductImage").src = productImage;
+        document.getElementById("modalProductPrice").textContent = productPrice;
 
         // Show modal
         const productModal = new bootstrap.Modal(
