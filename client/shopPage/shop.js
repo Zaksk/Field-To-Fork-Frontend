@@ -275,7 +275,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Use event delegation to handle clicks on product cards
   document
     .getElementById("productContainer")
-    .addEventListener("click", function (event) {
+    .addEventListener("click", async function (event) {
       // Check if the clicked element or its parent is a product card
       const productCard = event.target.closest(".product-card");
       if (productCard) {
@@ -442,14 +442,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Function to display the new comment on the page
   function displayComment(comment) {
     const commentsList = document.getElementById("commentsList");
-    const commentItem = document.createElement("li");
-    commentItem.classList.add("comment-item");
-    commentItem.textContent = comment.comment_text;
+
+    console.log("Received comment data:", comment);
+
+    const userName = comment.user_name || comment.username || "Anonymous";
+    const timestampRaw = comment.timestamp || comment.created_at || comment.date; 
+
+    let formattedTimestamp = "Unknown time";
+    if (timestampRaw) {
+        const timestamp = new Date(timestampRaw);
+        if (!isNaN(timestamp.getTime())) {
+            formattedTimestamp = timestamp.toLocaleString(); 
+        }
+    }
+
+    const commentItem = document.createElement("div");
+    commentItem.classList.add("comment-item", "card", "mb-2", "p-2", "shadow-sm");
+
+    commentItem.innerHTML = `
+        <div class="d-flex align-items-center">
+            <div>
+                <strong class="d-block">${userName}</strong>
+                <small class="text-muted">${formattedTimestamp}</small>
+            </div>
+        </div>
+        <p class="mt-2 mb-1">${comment.comment_text}</p>
+    `;
+
     commentsList.appendChild(commentItem);
-  }
+}
 });
 
 
