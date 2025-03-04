@@ -40,8 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
             productCard.classList.add("col-md-4");
 
             productCard.innerHTML = `
-                <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}">
-                    <img src="${product.product.image_url}| class="card-img-top product-image" alt="${product.type}">
+                <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}" data-product-id="${product.id}">
+                    <img src="${product.product.image_url}" class="card-img-top product-image" alt="${product.type}" data-product-id="${product.id}">
                     <div class="card-body">
                         <h4 class="card-title product-title">${product.type}</h4>
                         <p class="card-text product-description">${product.product.description}</p>
@@ -151,6 +151,68 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Append to the product container
         productContainer.prepend(productCard);
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const commentForm = document.getElementById("commentForm");
+    const commentText = document.getElementById("commentText");
+    const commentsList = document.getElementById("commentsList");
+
+    commentForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const commentContent = commentText.value.trim();
+        if (!commentContent) {
+            alert("Comment cannot be empty!");
+            return;
+        }
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("User is not authenticated. Please log in!");
+            return;
+        }
+        const productId = document.getElementById("modalProductTitle").dataset.productId;
+
+        const commentData = {
+            product_id: productId,
+            comment: commentContent
+        };
+
+        try {
+            // console.log("Sending comment data:", commentData);
+            console.log("Preparing to send comment...");
+            console.log("Token", token);
+            console.log("Product ID:", productId);
+            console.log("Comment Data:", JSON.stringify(commentData));
+            const response = await fetch("https://field-to-fork-backend.onrender.com/users/comments/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": token
+                },
+                body: JSON.stringify(commentData)
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to post comment.");
+            }
+
+            const newComment = await response.json();
+            displayComment(newComment);
+            commentText.value = "";
+        } catch (error) {
+            console.log("Error posting comment:", error);
+            alert("Failed to post comment. Please try again.");
+        }
+    });
+
+    function displayComment(comment) {
+        const commentItem = document.createElement("div");
+        commentItem.classList.add("comment-item", "p-2", "border-bottom");
+        commentItem.innerHTML = `<strong>User:</strong> ${comment.comment} <br><small>${new Date().toLocaleString()}</small>`;
+        commentsList.prepend(commentItem);
     }
 });
 
