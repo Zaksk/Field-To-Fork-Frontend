@@ -5,6 +5,7 @@ const productDescription = document.getElementById("productDescription");
 const productContainer = document.getElementById("productContainer");
 const productCards = document.querySelectorAll(".product-card");
 
+
 // API request to fetch & display products cards
 document.addEventListener("DOMContentLoaded", () => {
     const productContainer = document.getElementById("productContainer");
@@ -97,102 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// API request to Add new product
-document.addEventListener("DOMContentLoaded", function () {
-    const addProductForm = document.getElementById("addProductForm");
-    const productContainer = document.getElementById("productContainer");
-    const addProductModal = new bootstrap.Modal(document.getElementById("addProductModal"));
 
-    addProductForm.addEventListener("submit", async function (e) {
-        e.preventDefault(); // Prevent page refresh
-
-        const productName = document.getElementById("productName").value.trim();
-        const category = document.querySelector('input[name="selectOption"]:checked')?.value;
-        const productDescription = document.getElementById("productDescription").value.trim();
-        const productImageInput = document.getElementById("productImage").files[0];
-        const productPostcode = document.getElementById("productPostcode").value.trim();
-        const productPrice = document.getElementById("productPrice").value.trim();
-
-        if (!productName || !category || !productDescription || !productPostcode || !productPrice || !productImageInput) {
-            alert("Please fill in all fields and select an image!");
-            return;
-        }
-
-        // Convert image file to Base64
-        const imageUrl = await convertImageToBase64(productImageInput);
-
-        // Create a new product object
-        const newProduct = {
-            name: productName,
-            category: category,
-            description: productDescription,
-            image: imageUrl,
-            postcode: productPostcode,
-            price: parseFloat(productPrice).toFixed(2),
-        };
-
-        try {
-            // Send the product data to the database (POST request)
-            const response = await fetch("https://field-to-fork-backend.onrender.com/products/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": token
-                },
-                body: JSON.stringify(newProduct)
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to add product to database");
-            }
-
-            const savedProduct = await response.json(); // Get response from backend
-            addProductToUI(savedProduct); // Add to UI using the returned product data
-
-        } catch (error) {
-            console.error("Error adding product:", error);
-            alert("Failed to save product. Please try again.");
-            return;
-        }
-
-        // Close modal and reset form
-        addProductModal.hide();
-        addProductForm.reset();
-    });
-
-    // Function to convert image file to Base64
-    function convertImageToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    }
-
-    // Function to dynamically add a product to the UI
-    function addProductToUI(product) {
-        const productCard = document.createElement("div");
-        productCard.classList.add("col-md-4");
-
-        productCard.innerHTML = `
-            <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}">
-                <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
-                <div class="card-body">
-                    <h4 class="card-title product-title">${product.name}</h4>
-                    <p class="card-text product-id">id:${product.product.product_id}<p>
-                    <p class="card-text product-description">${product.description}</p>
-                    <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
-                    <p class="card-text"><strong>Price: £</strong>${product.price}</p>
-                    <a href="#" class="btn btn-outline-success">See More...</a>
-                </div>
-            </div>
-        `;
-
-        // Append to the product container
-        productContainer.prepend(productCard);
-    }
-});
 
 document.addEventListener("DOMContentLoaded", function () {
     const addProductForm = document.getElementById("addProductForm");
@@ -753,3 +659,176 @@ document.addEventListener('DOMContentLoaded', function() {
         cartTotalElement.innerText = total.toFixed(2);
     }
 });
+
+
+async function fetchProductTypeByCategory(categoryId) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        alert("User is not authenticated. Please log in!");
+        return;
+    }
+    try {
+      const response = await fetch(
+        `https://field-to-fork-backend.onrender.com/products/type/${categoryId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          }
+        }
+      );
+      console.log(response);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch types by category.");
+      }
+
+      return await response.json();      
+    } catch (error) {
+      console.log("Error fetching types:", error);
+    }
+};
+
+// API request to Add new product
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("TESTSTEST");
+  const addProductForm = document.getElementById("addProductForm");
+  const productContainer = document.getElementById("productContainer");
+  const addProductModal = new bootstrap.Modal(
+    document.getElementById("addProductModal")
+  );
+  // Dynamically adding product types
+  const categoryDropdown = document.getElementById("categoryDropdown");
+  categoryDropdown.addEventListener("change", async function (e) {
+    // Check selection
+    const typeDropdown = document.getElementById("typeDropdown");
+    const selectedCategory = this.options[this.selectedIndex];
+    const categoryId = selectedCategory.getAttribute("data-id");
+    typeDropdown.options.length = 1
+    if (categoryId)
+    {
+      // Fetch product types by category
+      data = await fetchProductTypeByCategory(categoryId);
+      for (const idx in data) {
+        const item = data[idx]
+        console.log(item);
+        let option = document.createElement("option");
+        option.value = item.type_name;
+        option.textContent = item.type_name;
+        option.setAttribute("data-type-id", item.type_id);
+        option.setAttribute("data-price-type-id", item.price_type_id)
+        option.setAttribute("data-price-type-name", item.price_type_name)
+        typeDropdown.appendChild(option);
+      }
+    }
+  });
+
+  
+
+  addProductForm.addEventListener("submit", async function (e) {
+    e.preventDefault(); // Prevent page refresh
+
+    const productName = document.getElementById("productName").value.trim();
+    const category = document.querySelector(
+      'input[name="selectOption"]:checked'
+    )?.value;
+    const productDescription = document
+      .getElementById("productDescription")
+      .value.trim();
+    const productImageInput = document.getElementById("productImage").files[0];
+    const productPostcode = document
+      .getElementById("productPostcode")
+      .value.trim();
+    const productPrice = document.getElementById("productPrice").value.trim();
+
+    if (
+      !productName ||
+      !category ||
+      !productDescription ||
+      !productPostcode ||
+      !productPrice ||
+      !productImageInput
+    ) {
+      alert("Please fill in all fields and select an image!");
+      return;
+    }
+
+    // Convert image file to Base64
+    const imageUrl = await convertImageToBase64(productImageInput);
+
+    // Create a new product object
+    const newProduct = {
+      name: productName,
+      category: category,
+      description: productDescription,
+      image: imageUrl,
+      postcode: productPostcode,
+      price: parseFloat(productPrice).toFixed(2),
+    };
+
+    try {
+      // Send the product data to the database (POST request)
+      const response = await fetch(
+        "https://field-to-fork-backend.onrender.com/products/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify(newProduct),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to add product to database");
+      }
+
+      const savedProduct = await response.json(); // Get response from backend
+      addProductToUI(savedProduct); // Add to UI using the returned product data
+    } catch (error) {
+      console.error("Error adding product:", error);
+      alert("Failed to save product. Please try again.");
+      return;
+    }
+
+    // Close modal and reset form
+    addProductModal.hide();
+    addProductForm.reset();
+  });
+
+  // Function to convert image file to Base64
+  function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
+  // Function to dynamically add a product to the UI
+  function addProductToUI(product) {
+    const productCard = document.createElement("div");
+    productCard.classList.add("col-md-4");
+
+    productCard.innerHTML = `
+            <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}">
+                <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
+                <div class="card-body">
+                    <h4 class="card-title product-title">${product.name}</h4>
+                    <p class="card-text product-id">id:${product.product.product_id}<p>
+                    <p class="card-text product-description">${product.description}</p>
+                    <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
+                    <p class="card-text"><strong>Price: £</strong>${product.price}</p>
+                    <a href="#" class="btn btn-outline-success">See More...</a>
+                </div>
+            </div>
+        `;
+
+    // Append to the product container
+    productContainer.prepend(productCard);
+  }
+});
+
