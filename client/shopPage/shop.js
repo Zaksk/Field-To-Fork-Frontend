@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchProducts() {
         try {
-            const token = localStorage.getItem("token");
+            const token = localStorage.getItem("token"); //hello
             const response = await fetch(apiUrl, {
                 method: "GET",
                 headers: {
@@ -439,45 +439,6 @@ async function getDistance(targetPostcode, productPostcode) {
 
 
 
-<<<<<<< HEAD
-=======
-// jQuery for filtering with radio buttons
-$(document).ready(function () {
-
-    // Function to filter products based on the selected category
-    function filterSelection(category) {
-        const productContainer = $("#productContainer");
-        productContainer.empty(); // Clear the container
-
-        if (category === "all") {
-            // Show all products
-            productCards.each(function () {
-                const col = $("<div>").addClass("col-md-4"); // Create a new column
-                col.append($(this).clone()); // Append the product card to the column
-                productContainer.append(col); // Add the column to the container
-            });
-        } else {
-            // Show only products of the selected category
-            productCards.each(function () {
-                if ($(this).attr("data-category") === category) {
-                    const col = $("<div>").addClass("col-md-4"); // Create a new column
-                    col.append($(this).clone()); // Append the product card to the column
-                    productContainer.append(col); // Add the column to the container
-                }
-            });
-        }
-    }
-
-    // Event listener for radio button change
-    $('input[type="radio"][name="product"]').change(function () {
-        const selectedCategory = $(this).val(); // Get the value of the selected radio button
-        filterSelection(selectedCategory); // Filter products
-    });
-
-    // Initial filter to show all products
-    filterSelection("all");
-});
->>>>>>> d9e4039383f8850318a2201daf3ae11447444796
 
 
 // Add search functionality
