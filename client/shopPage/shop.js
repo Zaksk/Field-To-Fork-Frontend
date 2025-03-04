@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <img src="${product.product.image_url}" class="card-img-top product-image" alt="${product.type}" data-product-id="${product.id}">
                     <div class="card-body">
                         <h4 class="card-title product-title">${product.type}</h4>
+                        <p class="card-text product-id">id:${product.product.product_id}<p>
                         <p class="card-text product-description">${product.product.description}</p>
                         <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
                         <p class="card-text"><strong>Price: £</strong>${product.product.price}</p>
@@ -178,6 +179,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
                 <div class="card-body">
                     <h4 class="card-title product-title">${product.name}</h4>
+                    <p class="card-text product-id">id:${product.product.product_id}<p>
                     <p class="card-text product-description">${product.description}</p>
                     <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
                     <p class="card-text"><strong>Price: £</strong>${product.price}</p>
@@ -188,68 +190,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Append to the product container
         productContainer.prepend(productCard);
-    }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const commentForm = document.getElementById("commentForm");
-    const commentText = document.getElementById("commentText");
-    const commentsList = document.getElementById("commentsList");
-
-    commentForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        const commentContent = commentText.value.trim();
-        if (!commentContent) {
-            alert("Comment cannot be empty!");
-            return;
-        }
-
-        const token = localStorage.getItem("token");
-        if (!token) {
-            alert("User is not authenticated. Please log in!");
-            return;
-        }
-        const productId = document.getElementById("modalProductTitle").dataset.productId;
-
-        const commentData = {
-            product_id: productId,
-            comment: commentContent
-        };
-
-        try {
-            // console.log("Sending comment data:", commentData);
-            console.log("Preparing to send comment...");
-            console.log("Token", token);
-            console.log("Product ID:", productId);
-            console.log("Comment Data:", JSON.stringify(commentData));
-            const response = await fetch("https://field-to-fork-backend.onrender.com/users/comments/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": token
-                },
-                body: JSON.stringify(commentData)
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to post comment.");
-            }
-
-            const newComment = await response.json();
-            displayComment(newComment);
-            commentText.value = "";
-        } catch (error) {
-            console.log("Error posting comment:", error);
-            alert("Failed to post comment. Please try again.");
-        }
-    });
-
-    function displayComment(comment) {
-        const commentItem = document.createElement("div");
-        commentItem.classList.add("comment-item", "p-2", "border-bottom");
-        commentItem.innerHTML = `<strong>User:</strong> ${comment.comment} <br><small>${new Date().toLocaleString()}</small>`;
-        commentsList.prepend(commentItem);
     }
 });
 
@@ -329,27 +269,119 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Display the card when clicked
 document.addEventListener("DOMContentLoaded", function () {
-    // Use event delegation to handle clicks on product cards
-    document.getElementById("productContainer").addEventListener("click", function (event) {
-        // Check if the clicked element or its parent is a product card
-        const productCard = event.target.closest(".product-card");
-        if (productCard) {
-            let productTitle, productDescription, productImage;
+  let productId = null;
 
-            // Get data from the clicked product card
-            productTitle = productCard.querySelector(".product-title").textContent;
-            productDescription = productCard.querySelector(".product-description").textContent;
-            productImage = productCard.querySelector(".product-image").src || "../assets/default-product.jpg";
-            // Update modal content
-            document.getElementById("modalProductTitle").textContent = productTitle;
-            document.getElementById("modalProductDescription").textContent = productDescription;
-            document.getElementById("modalProductImage").src = productImage;
+  // Use event delegation to handle clicks on product cards
+  document
+    .getElementById("productContainer")
+    .addEventListener("click", function (event) {
+      // Check if the clicked element or its parent is a product card
+      const productCard = event.target.closest(".product-card");
+      if (productCard) {
+        let productTitle, productDescription, productImage;
 
-            // Show modal
-            const productModal = new bootstrap.Modal(document.getElementById("productModal"));
-            productModal.show();
-        }
+        // Get data from the clicked product card
+        productTitle = productCard.querySelector(".product-title").textContent;
+        productDescription = productCard.querySelector(
+          ".product-description"
+        ).textContent;
+        productImage =
+          productCard.querySelector(".product-image").src ||
+          "../assets/default-product.jpg";
+
+        // Get product ID from the card
+        productId = parseInt(
+          productCard
+            .querySelector(".product-id")
+            .innerText.replace("id:", "")
+            .trim()
+        );
+
+        console.log("Selected Product ID:", productId);
+
+        // Update modal content
+        document.getElementById("modalProductTitle").textContent = productTitle;
+        document.getElementById("modalProductDescription").textContent =
+          productDescription;
+        document.getElementById("modalProductImage").src = productImage;
+
+        // Show modal
+        const productModal = new bootstrap.Modal(
+          document.getElementById("productModal")
+        );
+        productModal.show();
+      }
     });
+
+  // Comment form submission
+  const commentForm = document.getElementById("commentForm");
+  const commentText = document.getElementById("commentText");
+
+  commentForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const commentContent = commentText.value.trim();
+    if (!commentContent) {
+      alert("Comment cannot be empty!");
+      return;
+    }
+
+    // Check if a product has been selected
+    if (!productId) {
+      alert("No product selected. Please select a product first!");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("User is not authenticated. Please log in!");
+      return;
+    }
+
+    const commentData = {
+      product_id: productId, // Use the selected product ID
+      comment_text: commentContent,
+    };
+
+    try {
+      console.log("Preparing to send comment...");
+      console.log("Token:", token);
+      console.log("Selected Product ID:", productId);
+      console.log("Comment Data:", JSON.stringify(commentData));
+
+      const response = await fetch(
+        "https://field-to-fork-backend.onrender.com/users/comments/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify(commentData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to post comment.");
+      }
+
+      const newComment = await response.json();
+      displayComment(newComment);
+      commentText.value = ""; // Clear the comment text
+    } catch (error) {
+      console.log("Error posting comment:", error);
+      alert("Failed to post comment. Please try again.");
+    }
+  });
+
+  // Function to display the new comment on the page
+  function displayComment(comment) {
+    const commentsList = document.getElementById("commentsList");
+    const commentItem = document.createElement("li");
+    commentItem.classList.add("comment-item");
+    commentItem.textContent = comment.comment_text;
+    commentsList.appendChild(commentItem);
+  }
 });
 
 
