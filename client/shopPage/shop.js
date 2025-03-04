@@ -360,7 +360,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const commentItem = document.createElement("div");
       commentItem.classList.add("comment-item", "card", "mb-2", "p-2", "shadow-sm");
       const createdAt = formatTimestamp(comment.comment.created_at);
-    //   commentItem.textContent = `${comment.comment.comment_text} ${createdAt} (by User: ${comment.user_name})`;
         commentItem.innerHTML = `
         <div class="d-flex align-items-center">
             <div>
@@ -447,13 +446,6 @@ document.addEventListener("DOMContentLoaded", function () {
             formattedTimestamp = timestamp.toLocaleString(); 
         }
     }
-
-    const commentItem = document.createElement("div");
-    commentItem.classList.add("comment-item", "card", "mb-2", "p-2", "shadow-sm");
-
-
-
-    commentsList.appendChild(commentItem);
 }
 });
 
