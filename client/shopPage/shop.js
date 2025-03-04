@@ -290,7 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
           productCard.querySelector(".product-image").src ||
           "../assets/default-product.jpg";
 
-        productPrice = productCard.querySelector(".product-price").textContent
+        productPrice = productCard.querySelector(".product-price").textContent;
 
         // Get product ID from the card
         productId = parseInt(
@@ -302,7 +302,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Update modal content
         document.getElementById("modalProductTitle").textContent = productTitle;
-        document.getElementById("modalProductDescription").textContent = productDescription;
+        document.getElementById("modalProductDescription").textContent =
+          productDescription;
         document.getElementById("modalProductImage").src = productImage;
         document.getElementById("modalProductPrice").textContent = productPrice;
 
@@ -311,8 +312,79 @@ document.addEventListener("DOMContentLoaded", function () {
           document.getElementById("productModal")
         );
         productModal.show();
+
+        // Fetch comments for the selected product
+        fetchComments(productId);
       }
     });
+
+  // Fetch comments for a specific product
+  async function fetchComments(productId) {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("User is not authenticated. Please log in!");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://field-to-fork-backend.onrender.com/users/comments/${productId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch comments.");
+      }
+
+      const comments = await response.json();
+      console.log(comments);
+      displayComments(comments);
+    } catch (error) {
+      console.log("Error fetching comments:", error);
+      alert("Failed to load comments. Please try again.");
+    }
+  }
+
+  // Function to display comments on the page
+  function displayComments(comments) {
+    const commentsList = document.getElementById("commentsList");
+    commentsList.innerHTML = ""; // Clear previous comments
+
+    // Check if there are comments
+    if (comments.length === 0) {
+      commentsList.innerHTML =
+        "<li>No comments yet. Be the first to comment!</li>";
+      return;
+    }
+
+    // Function to convert the timestamp
+    
+    function formatTimestamp(timestamp) {
+      return new Date(timestamp).toLocaleString("en-GB", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    }
+
+
+    // Display each comment
+    comments.forEach((comment) => {
+      const commentItem = document.createElement("li");
+      commentItem.classList.add("comment-item");
+      const createdAt = formatTimestamp(comment.comment.created_at);
+      commentItem.textContent = `${comment.comment.comment_text} ${createdAt} (by User: ${comment.user_name})`;
+      commentsList.appendChild(commentItem);
+    });
+  }
 
   // Comment form submission
   const commentForm = document.getElementById("commentForm");
