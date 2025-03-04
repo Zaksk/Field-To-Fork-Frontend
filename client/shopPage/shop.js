@@ -8,32 +8,57 @@ document.addEventListener("DOMContentLoaded", () => {
     const productContainer = document.getElementById("productContainer");
 
     const apiUrl = "https://field-to-fork-backend.onrender.com/products/";
+    let allProducts = []; 
 
     async function fetchProducts() {
         try {
-            const token = localStorage.getItem("token")
-            const response = await fetch(
-              "https://field-to-fork-backend.onrender.com/products/",
-              {
+            const token = localStorage.getItem("token");
+            const response = await fetch(apiUrl, {
                 method: "GET",
                 headers: {
-                  Authorization: token,
+                    Authorization: token,
                 },
-              }
-            );
+            });
             if (!response.ok) {
                 throw new Error("Failed to fetch products");
             }
             const products = await response.json();
-            console.log("products fetched from api ", products[0]);
+            console.log("Fetched products:", products); 
+
+            allProducts = products; 
             renderProducts(products);
         } catch (error) {
             console.log("Error fetching products", error);
         }
     }
 
+    function filterProducts(category) {
+        let filteredProducts;
+    
+        console.log("Filtering products by category:", category);
+    
+        if (category === "all") {
+            filteredProducts = allProducts; 
+        } else {
+
+            filteredProducts = allProducts.filter(product => {
+                console.log(`Checking product with category: ${product.category}`);
+                return product.category === category; 
+            });
+        }
+    
+        console.log("Filtered products:", filteredProducts);
+    
+        renderProducts(filteredProducts); 
+    }
+    
+
     function renderProducts(products) {
-        productContainer.innerHTML = "";
+        productContainer.innerHTML = ""; 
+
+        if (products.length === 0) {
+            productContainer.innerHTML = "<p>No products found for this category.</p>";
+        }
 
         products.forEach(product => {
             const productCard = document.createElement("div");
@@ -55,8 +80,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    fetchProducts();
-})
+    // Event listener for filter change
+    document.querySelectorAll('input[type="radio"][name="product"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            const selectedCategory = this.value;
+            console.log("Selected Category from radio button:", selectedCategory);
+            filterProducts(selectedCategory); 
+        });
+    });
+
+    fetchProducts(); 
+});
+
 
 // API request to Add new product
 document.addEventListener("DOMContentLoaded", function () {
@@ -402,42 +437,6 @@ async function getDistance(targetPostcode, productPostcode) {
 
 
 
-// jQuery for filtering with radio buttons
-$(document).ready(function () {
-
-    // Function to filter products based on the selected category
-    function filterSelection(category) {
-        const productContainer = $("#productContainer");
-        productContainer.empty(); // Clear the container
-
-        if (category === "all") {
-            // Show all products
-            allProductCards.each(function () {
-                const col = $("<div>").addClass("col-md-4"); // Create a new column
-                col.append($(this).clone()); // Append the product card to the column
-                productContainer.append(col); // Add the column to the container
-            });
-        } else {
-            // Show only products of the selected category
-            allProductCards.each(function () {
-                if ($(this).attr("data-category") === category) {
-                    const col = $("<div>").addClass("col-md-4"); // Create a new column
-                    col.append($(this).clone()); // Append the product card to the column
-                    productContainer.append(col); // Add the column to the container
-                }
-            });
-        }
-    }
-
-    // Event listener for radio button change
-    $('input[type="radio"][name="product"]').change(function () {
-        const selectedCategory = $(this).val(); // Get the value of the selected radio button
-        filterSelection(selectedCategory); // Filter products
-    });
-
-    // Initial filter to show all products
-    filterSelection("all");
-});
 
 
 // Add search functionality
