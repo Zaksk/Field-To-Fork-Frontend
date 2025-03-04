@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <h4 class="card-title product-title">${product.type}</h4>
                         <p class="card-text product-id">id:${product.product.product_id}<p>
                         <p class="card-text product-description">${product.product.description}</p>
+                        <p class="card-texr product-postcode">${product.postcode}<p>
                         <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
                         <p class="card-text product-price"><strong>Price: £</strong>${product.product.price}</p>
                         <a href="#" class="btn btn-outline-success">See More...</a>
@@ -290,7 +291,6 @@ document.addEventListener("DOMContentLoaded", function () {
           "../assets/default-product.jpg";
 
         productPrice = productCard.querySelector(".product-price").textContent
-        console.log("Product price", productPrice);
 
         // Get product ID from the card
         productId = parseInt(
@@ -345,11 +345,6 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     try {
-      console.log("Preparing to send comment...");
-      console.log("Token:", token);
-      console.log("Selected Product ID:", productId);
-      console.log("Comment Data:", JSON.stringify(commentData));
-
       const response = await fetch(
         "https://field-to-fork-backend.onrender.com/users/comments/",
         {
