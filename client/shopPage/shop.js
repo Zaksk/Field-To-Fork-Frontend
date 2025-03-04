@@ -357,12 +357,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Display each comment
     comments.forEach((comment) => {
-      const commentItem = document.createElement("li");
-      commentItem.classList.add("comment-item");
+      const commentItem = document.createElement("div");
+      commentItem.classList.add("comment-item", "card", "mb-2", "p-2", "shadow-sm");
       const createdAt = formatTimestamp(comment.comment.created_at);
-      commentItem.textContent = `${comment.comment.comment_text} ${createdAt} (by User: ${comment.user_name})`;
+    //   commentItem.textContent = `${comment.comment.comment_text} ${createdAt} (by User: ${comment.user_name})`;
+        commentItem.innerHTML = `
+        <div class="d-flex align-items-center">
+            <div>
+                <strong class="d-block">${comment.user_name}</strong>
+                <small class="text-muted">${createdAt}</small>
+            </div>
+        </div>
+        <p class="mt-2 mb-1">${comment.comment.comment_text}</p>
+        `;
       commentsList.appendChild(commentItem);
     });
+
+
   }
 
   // Comment form submission
@@ -440,15 +451,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const commentItem = document.createElement("div");
     commentItem.classList.add("comment-item", "card", "mb-2", "p-2", "shadow-sm");
 
-    commentItem.innerHTML = `
-        <div class="d-flex align-items-center">
-            <div>
-                <strong class="d-block">${userName}</strong>
-                <small class="text-muted">${formattedTimestamp}</small>
-            </div>
-        </div>
-        <p class="mt-2 mb-1">${comment.comment_text}</p>
-    `;
+
 
     commentsList.appendChild(commentItem);
 }

@@ -121,3 +121,8 @@
   .comment-form {
     margin-bottom: 10px;
   }
+
+  .comment-box {
+    background-color: #0A7029;
+    color: white;
+  }
