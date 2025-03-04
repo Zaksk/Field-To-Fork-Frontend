@@ -7,9 +7,8 @@ const productCards = document.querySelectorAll(".product-card");
 const dataBtn = document.getElementById("dataBtn");
 
 dataBtn.addEventListener("click", () => {
-    window.location.assign("../visualsPage/data.html");
-})
-
+  window.location.assign("../visualsPage/data.html");
+});
 // URLS
 const apiUrl = "https://field-to-fork-backend.onrender.com";
 const productsUrl = `${apiUrl}/products/`;
@@ -213,7 +212,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "shadow-sm"
       );
       const createdAt = formatTimestamp(comment.comment.created_at);
-    //   commentItem.textContent = `${comment.comment.comment_text} ${createdAt} (by User: ${comment.user_name})`;
         commentItem.innerHTML = `
         <div class="d-flex align-items-center">
             <div>
@@ -301,13 +299,6 @@ document.addEventListener("DOMContentLoaded", function () {
         formattedTimestamp = timestamp.toLocaleString();
       }
     }
-
-    const commentItem = document.createElement("div");
-    commentItem.classList.add("comment-item", "card", "mb-2", "p-2", "shadow-sm");
-
-
-
-    commentsList.appendChild(commentItem);
 }
 });
 
