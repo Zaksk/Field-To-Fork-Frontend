@@ -229,10 +229,11 @@
                     <h6>Comments</h6>
                     <div id="comments"></div>
                     <p><strong>Leave a comment about this product here:</strong></p>
-                    <form class="comment-form">
-                        <input type="textarea" class="comment-textarea">
+                    <form class="comment-form" id="commentForm">
+                        <textarea id="commentText" class="form-control comment-textarea" placeholder="Leave a comment" required></textarea>
                         <button type="submit" class="btn btn-outline-success">Submit</button>
                     </form>
+                    <div id="commentsList"></div>
                 </div>
             </div>
         </div>
