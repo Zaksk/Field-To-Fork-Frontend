@@ -2,6 +2,8 @@ const productCard = document.getElementById("productCard");
 const productImage = document.getElementById("productImage");
 const productTitle = document.getElementById("productTitle");
 const productDescription = document.getElementById("productDescription");
+const productContainer = document.getElementById("productContainer");
+const productCards = document.querySelectorAll(".product-card");
 
 // API request to fetch & display products cards
 document.addEventListener("DOMContentLoaded", () => {
@@ -412,14 +414,14 @@ $(document).ready(function () {
 
         if (category === "all") {
             // Show all products
-            allProductCards.each(function () {
+            productCards.each(function () {
                 const col = $("<div>").addClass("col-md-4"); // Create a new column
                 col.append($(this).clone()); // Append the product card to the column
                 productContainer.append(col); // Add the column to the container
             });
         } else {
             // Show only products of the selected category
-            allProductCards.each(function () {
+            productCards.each(function () {
                 if ($(this).attr("data-category") === category) {
                     const col = $("<div>").addClass("col-md-4"); // Create a new column
                     col.append($(this).clone()); // Append the product card to the column
@@ -521,8 +523,7 @@ async function sortProductsByDistance(userPostcode) {
 
 // Function to reset product cards to their original unordered state
 function resetProductCards() {
-    const productContainer = document.getElementById("productContainer");
-    const productCards = document.querySelectorAll(".product-card");
+    
 
     // Clear the container before appending original cards
     productContainer.innerHTML = "";
