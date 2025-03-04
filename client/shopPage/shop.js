@@ -245,27 +245,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Function to dynamically add a product to the UI
-    function addProductToUI(product) {
-        const productCard = document.createElement("div");
-        productCard.classList.add("col-md-4");
-
-        productCard.innerHTML = `
-            <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}">
-                <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
-                <div class="card-body">
-                    <h4 class="card-title product-title">${product.name}</h4>
-                    <p class="card-text product-description">${product.description}</p>
-                    <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
-                    <p class="card-text"><strong>Price: £</strong>${product.price}</p>
-                    <a href="#" class="btn btn-outline-success">See More...</a>
-                </div>
-            </div>
-        `;
-
-        // Append to the product container
-        productContainer.prepend(productCard);
-    }
 });
 
 // Display the card when clicked
