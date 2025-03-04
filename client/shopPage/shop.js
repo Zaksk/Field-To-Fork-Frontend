@@ -4,6 +4,11 @@ const productTitle = document.getElementById("productTitle");
 const productDescription = document.getElementById("productDescription");
 const productContainer = document.getElementById("productContainer");
 const productCards = document.querySelectorAll(".product-card");
+const dataBtn = document.getElementById("dataBtn");
+
+dataBtn.addEventListener("click", () => {
+    window.location.assign("../visualsPage/data.html");
+})
 
 // API request to fetch & display products cards
 document.addEventListener("DOMContentLoaded", () => {
