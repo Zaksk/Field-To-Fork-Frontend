@@ -63,6 +63,21 @@
     display: none;
   }
 
+  .product-image {
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .modal-title {
+    margin-right: 230px;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
   nav {
     width: 100%;
     display: flex;
