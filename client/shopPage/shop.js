@@ -312,6 +312,13 @@ document.addEventListener("DOMContentLoaded", function () {
   addProductBtn.addEventListener("click", function () {
     addProductModal.show();
   });
+
+  document.getElementById("addProductModal").addEventListener("hidden.bs.modal", function () {
+    document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
+        backdrop.remove();
+    });
+    document.body.classList.remove("modal-open");
+  })
 });
 
 // Function to get coordinates (latitude and longitude) for a given postcode
