@@ -317,16 +317,38 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Received comment data:", comment);
 
     const userName = comment.user_name || comment.username || "Anonymous";
-    const timestampRaw =
-      comment.timestamp || comment.created_at || comment.date;
+    const timestampRaw = comment.timestamp || comment.created_at || comment.date;
 
     let formattedTimestamp = "Unknown time";
     if (timestampRaw) {
-      const timestamp = new Date(timestampRaw);
-      if (!isNaN(timestamp.getTime())) {
-        formattedTimestamp = timestamp.toLocaleString();
-      }
+        const timestamp = new Date(timestampRaw);
+        if (!isNaN(timestamp.getTime())) {
+            formattedTimestamp = timestamp.toLocaleString("en-GB", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+            });
+        }
     }
+
+    // Create the comment item
+    const commentItem = document.createElement("div");
+    commentItem.classList.add("comment-item", "card", "mb-2", "p-2", "shadow-sm");
+
+    commentItem.innerHTML = `
+        <div class="d-flex align-items-center">
+            <div>
+                <strong class="d-block">${userName}</strong>
+                <small class="text-muted">${formattedTimestamp}</small>
+            </div>
+        </div>
+        <p class="mt-2 mb-1">${comment.comment_text || comment.comment?.comment_text}</p>
+    `;
+
+    commentsList.prepend(commentItem); // Prepend to show latest comment on top
 }
 });
 
