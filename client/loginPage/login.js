@@ -1,3 +1,7 @@
+// const loginUrl = "https://field-to-fork-backend.onrender.com/users/login";
+const loginUrl =
+  "http://ec2-13-41-205-113.eu-west-2.compute.amazonaws.com:3000/users/login";
+
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -15,7 +19,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         })
     };
 
-    const response = await fetch("https://field-to-fork-backend.onrender.com/users/login", options);
+    const response = await fetch(loginUrl, options);
     const data = await response.json();
     console.log(data)
 

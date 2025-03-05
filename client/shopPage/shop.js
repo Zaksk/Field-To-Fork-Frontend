@@ -6,13 +6,20 @@ const productContainer = document.getElementById("productContainer");
 const productCards = document.querySelectorAll(".product-card");
 const dataBtn = document.getElementById("dataBtn");
 
+// Urls to be used
+// MVC
+//const apiUrl = "https://field-to-fork-backend.onrender.com";
+const apiUrl = "http://ec2-13-41-205-113.eu-west-2.compute.amazonaws.com:3000";
+const productsUrl = `${apiUrl}/products`;
+const usersUrl = `${apiUrl}/users`;
+const commentsUrl = `${usersUrl}/comments`;
+// Postcode API
+const postcodesUrl = "https://api.postcodes.io/postcodes";
+
+
 dataBtn.addEventListener("click", () => {
   window.location.assign("../visualsPage/data.html");
 });
-// URLS
-const apiUrl = "https://field-to-fork-backend.onrender.com";
-const productsUrl = `${apiUrl}/products/`;
-// TODO: add other urls here and use variables
 
 // Fetches products and returns them
 async function fetchProducts() {
@@ -182,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       const response = await fetch(
-        `https://field-to-fork-backend.onrender.com/users/comments/${productId}`,
+        `${commentsUrl}/${productId}`,
         {
           method: "GET",
           headers: {
@@ -293,10 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
           body: JSON.stringify(commentData),
         };
         console.log(`Comment: ${JSON.stringify(data)}`);
-      const response = await fetch(
-        "https://field-to-fork-backend.onrender.com/users/comments/",
-        data
-      );
+      const response = await fetch(`${commentsUrl}/`, data);
 
       if (!response.ok) {
         throw new Error("Failed to post comment.");
@@ -416,7 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchCoordinates(postcode) {
         try {
-            const response = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
+            const response = await fetch(`${postcodesUrl}/${postcode}`);
             if (!response.ok) throw new Error("Invalid postcode");
             const { result } = await response.json();
             return { lat: result.latitude, lon: result.longitude };
@@ -559,7 +563,7 @@ async function fetchProductTypeByCategory(categoryId) {
   }
   try {
     const response = await fetch(
-      `https://field-to-fork-backend.onrender.com/products/type/${categoryId}`,
+      `${productsUrl}/type/${categoryId}`,
       {
         method: "GET",
         headers: {
@@ -588,7 +592,7 @@ async function createProductOnServer(product) {
 
   try {
     const response = await fetch(
-        "https://field-to-fork-backend.onrender.com/products/",
+        `${productsUrl}/`,
         {
             method: "POST",
             headers: {
