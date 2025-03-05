@@ -4,247 +4,96 @@ const productTitle = document.getElementById("productTitle");
 const productDescription = document.getElementById("productDescription");
 const productContainer = document.getElementById("productContainer");
 const productCards = document.querySelectorAll(".product-card");
+const dataBtn = document.getElementById("dataBtn");
 
-// API request to fetch & display products cards
-document.addEventListener("DOMContentLoaded", () => {
-    const productContainer = document.getElementById("productContainer");
-
-    const apiUrl = "https://field-to-fork-backend.onrender.com/products/";
-    let allProducts = []; 
-
-    async function fetchProducts() {
-        try {
-            const token = localStorage.getItem("token"); //hello from Zak
-            const response = await fetch(apiUrl, {
-                method: "GET",
-                headers: {
-                    Authorization: token,
-                },
-            });
-            if (!response.ok) {
-                throw new Error("Failed to fetch products");
-            }
-            const products = await response.json();
-            console.log("Fetched products:", products); 
-
-            allProducts = products; 
-            renderProducts(products);
-        } catch (error) {
-            console.log("Error fetching products", error);
-        }
-    }
-
-    function filterProducts(category) {
-        let filteredProducts;
-    
-        console.log("Filtering products by category:", category);
-    
-        if (category === "all") {
-            filteredProducts = allProducts; 
-        } else {
-
-            filteredProducts = allProducts.filter(product => {
-                console.log(`Checking product with category: ${product.category}`);
-                return product.category === category; 
-            });
-        }
-    
-        console.log("Filtered products:", filteredProducts);
-    
-        renderProducts(filteredProducts); 
-    }
-    
-
-    function renderProducts(products) {
-        productContainer.innerHTML = ""; 
-
-        if (products.length === 0) {
-            productContainer.innerHTML = "<p>No products found for this category.</p>";
-        }
-
-        products.forEach(product => {
-            const productCard = document.createElement("div");
-            productCard.classList.add("col-md-4");
-
-            productCard.innerHTML = `
-                <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}" data-product-id="${product.id}">
-                    <img src="${product.product.image_url}" class="card-img-top product-image" alt="${product.type}" data-product-id="${product.id}">
-                    <div class="card-body">
-                        <h4 class="card-title product-title">${product.type}</h4>
-                        <p class="card-text product-id">id:${product.product.product_id}<p>
-                        <p class="card-text product-description">${product.product.description}</p>
-                        <p class="card-texr product-postcode">${product.postcode}<p>
-                        <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
-                        <p class="card-text product-price"><strong>Price: £</strong>${product.product.price}</p>
-                        <a href="#" class="btn btn-outline-success">See More...</a>
-                    </div>
-                </div>
-            `;
-            productContainer.appendChild(productCard);
-        });
-    }
-
-    // Event listener for filter change
-    document.querySelectorAll('input[type="radio"][name="product"]').forEach(radio => {
-        radio.addEventListener('change', function () {
-            const selectedCategory = this.value;
-            console.log("Selected Category from radio button:", selectedCategory);
-            filterProducts(selectedCategory); 
-        });
-    });
-
-    fetchProducts(); 
+dataBtn.addEventListener("click", () => {
+  window.location.assign("../visualsPage/data.html");
 });
+// URLS
+const apiUrl = "https://field-to-fork-backend.onrender.com";
+const productsUrl = `${apiUrl}/products/`;
+// TODO: add other urls here and use variables
 
-
-// API request to Add new product
-document.addEventListener("DOMContentLoaded", function () {
-    const addProductForm = document.getElementById("addProductForm");
-    const productContainer = document.getElementById("productContainer");
-    const addProductModal = new bootstrap.Modal(document.getElementById("addProductModal"));
-
-    addProductForm.addEventListener("submit", async function (e) {
-        e.preventDefault(); // Prevent page refresh
-
-        const productName = document.getElementById("productName").value.trim();
-        const category = document.querySelector('input[name="selectOption"]:checked')?.value;
-        const productDescription = document.getElementById("productDescription").value.trim();
-        const productImageInput = document.getElementById("productImage").files[0];
-        const productPostcode = document.getElementById("productPostcode").value.trim();
-        const productPrice = document.getElementById("productPrice").value.trim();
-
-        if (!productName || !category || !productDescription || !productPostcode || !productPrice || !productImageInput) {
-            alert("Please fill in all fields and select an image!");
-            return;
-        }
-
-        // Convert image file to Base64
-        const imageUrl = await convertImageToBase64(productImageInput);
-
-        // Create a new product object
-        const newProduct = {
-            name: productName,
-            category: category,
-            description: productDescription,
-            image: imageUrl,
-            postcode: productPostcode,
-            price: parseFloat(productPrice).toFixed(2),
-        };
-
-        try {
-            // Send the product data to the database (POST request)
-            const response = await fetch("https://field-to-fork-backend.onrender.com/products/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": token
-                },
-                body: JSON.stringify(newProduct)
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to add product to database");
-            }
-
-            const savedProduct = await response.json(); // Get response from backend
-            addProductToUI(savedProduct); // Add to UI using the returned product data
-
-        } catch (error) {
-            console.error("Error adding product:", error);
-            alert("Failed to save product. Please try again.");
-            return;
-        }
-
-        // Close modal and reset form
-        addProductModal.hide();
-        addProductForm.reset();
-    });
-
-    // Function to convert image file to Base64
-    function convertImageToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
+// Fetches products and returns them
+async function fetchProducts() {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(productsUrl, {
+            method: "GET",
+            headers: {
+                Authorization: token,
+            },
         });
+        if (!response.ok) {
+            throw new Error("Failed to fetch products");
+        }
+        return await response.json();
+
+    } catch (error) {
+        console.log("Error fetching products", error);
+        return [];
     }
+}
 
-    // Function to dynamically add a product to the UI
-    function addProductToUI(product) {
-        const productCard = document.createElement("div");
-        productCard.classList.add("col-md-4");
+// Renders the list of products
+function renderProducts(products) {
+  productContainer.innerHTML = "";
 
-        productCard.innerHTML = `
-            <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}">
-                <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
+  if (products.length === 0) {
+    productContainer.innerHTML = "<p>No products found for this category.</p>";
+  }
+
+  products.forEach((product) => {
+    const productCard = document.createElement("div");
+    productCard.classList.add("col-md-4");
+
+    productCard.innerHTML = `
+            <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}" data-product-id="${product.id}">
+                <img src="${product.product.image_url}" class="card-img-top product-image" alt="${product.type}" data-product-id="${product.id}">
                 <div class="card-body">
-                    <h4 class="card-title product-title">${product.name}</h4>
+                    <h4 class="card-title product-title">${product.type}</h4>
                     <p class="card-text product-id">id:${product.product.product_id}<p>
-                    <p class="card-text product-description">${product.description}</p>
-                    <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
-                    <p class="card-text"><strong>Price: £</strong>${product.price}</p>
+                    <p class="card-text product-description">${product.product.description}</p>
+                    <p class="card-texr product-postcode"><strong>Location: </strong>${product.postcode}<p>
+                    <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
+                    <p class="card-text product-price"><strong>Price: £</strong>${product.product.price}</p>
                     <a href="#" class="btn btn-outline-success">See More...</a>
                 </div>
             </div>
         `;
+    productContainer.appendChild(productCard);
+  });
+}
 
-        // Append to the product container
-        productContainer.prepend(productCard);
+// API request to fetch & display products cards
+document.addEventListener("DOMContentLoaded", async () => {
+  const allProducts = await fetchProducts();
+  renderProducts(allProducts);
+
+  function filterProducts(category) {
+    let filteredProducts;
+
+    if (category === "all") {
+        return allProducts;
     }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const addProductForm = document.getElementById("addProductForm");
-    const productContainer = document.getElementById("productContainer");
-    const addProductModal = new bootstrap.Modal(document.getElementById("addProductModal"));
-
-    addProductForm.addEventListener("submit", async function (e) {
-        e.preventDefault(); // Prevent form submission refresh
-
-        const productName = document.getElementById("productName").value.trim();
-        const category = document.querySelector('input[name="selectOption"]:checked')?.value;
-        const productDescription = document.getElementById("productDescription").value.trim();
-        const productImageInput = document.getElementById("productImage").files[0];
-        const productPostcode = document.getElementById("productPostcode").value.trim();
-        const productPrice = document.getElementById("productPrice").value.trim();
-
-        if (!productName || !category || !productDescription || !productPostcode || !productPrice || !productImageInput) {
-            alert("Please fill in all fields and select an image!");
-            return;
-        }
-
-        // Convert image file to Base64
-        const imageUrl = await convertImageToBase64(productImageInput);
-
-        // Create a new product object
-        const newProduct = {
-            name: productName,
-            category: category,
-            description: productDescription,
-            image: imageUrl,
-            postcode: productPostcode,
-            price: parseFloat(productPrice).toFixed(2),
-        };
-
-        // Add the product to the UI dynamically
-        addProductToUI(newProduct);
-
-        // Close the modal and reset the form
-        addProductModal.hide();
-        addProductForm.reset();
+    
+    return allProducts.filter((product) => {
+        console.log(`Checking product with category: ${product.category}`);
+        return product.category === category;
     });
+  }
 
-    // Function to convert image file to Base64 for immediate display
-    function convertImageToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    }
-
+  // Event listener for filter change
+  document
+    .querySelectorAll('input[type="radio"][name="product"]')
+    .forEach((radio) => {
+      radio.addEventListener("change", function () {
+        const selectedCategory = this.value;
+        console.log("Selected Category from radio button:", selectedCategory);
+        const filteredProducts = filterProducts(selectedCategory);
+        renderProducts(filteredProducts);
+      });
+    });
 });
 
 // Display the card when clicked
@@ -252,9 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let productId = null;
 
   // Use event delegation to handle clicks on product cards
-  document
-    .getElementById("productContainer")
-    .addEventListener("click", async function (event) {
+  productContainer.addEventListener("click", async function (event) {
       // Check if the clicked element or its parent is a product card
       const productCard = event.target.closest(".product-card");
       if (productCard) {
@@ -342,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Function to convert the timestamp
-    
+
     function formatTimestamp(timestamp) {
       return new Date(timestamp).toLocaleString("en-GB", {
         year: "numeric",
@@ -354,13 +201,26 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-
     // Display each comment
     comments.forEach((comment) => {
-      const commentItem = document.createElement("li");
-      commentItem.classList.add("comment-item");
+      const commentItem = document.createElement("div");
+      commentItem.classList.add(
+        "comment-item",
+        "card",
+        "mb-2",
+        "p-2",
+        "shadow-sm"
+      );
       const createdAt = formatTimestamp(comment.comment.created_at);
-      commentItem.textContent = `${comment.comment.comment_text} ${createdAt} (by User: ${comment.user_name})`;
+        commentItem.innerHTML = `
+        <div class="d-flex align-items-center">
+            <div>
+                <strong class="d-block">${comment.user_name}</strong>
+                <small class="text-muted">${createdAt}</small>
+            </div>
+        </div>
+        <p class="mt-2 mb-1">${comment.comment.comment_text}</p>
+        `;
       commentsList.appendChild(commentItem);
     });
   }
@@ -396,16 +256,18 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     try {
-      const response = await fetch(
-        "https://field-to-fork-backend.onrender.com/users/comments/",
-        {
+        const data = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: token,
           },
           body: JSON.stringify(commentData),
-        }
+        };
+        console.log(`Comment: ${JSON.stringify(data)}`);
+      const response = await fetch(
+        "https://field-to-fork-backend.onrender.com/users/comments/",
+        data
       );
 
       if (!response.ok) {
@@ -427,42 +289,36 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Received comment data:", comment);
 
     const userName = comment.user_name || comment.username || "Anonymous";
-    const timestampRaw = comment.timestamp || comment.created_at || comment.date; 
+    const timestampRaw =
+      comment.timestamp || comment.created_at || comment.date;
 
     let formattedTimestamp = "Unknown time";
     if (timestampRaw) {
-        const timestamp = new Date(timestampRaw);
-        if (!isNaN(timestamp.getTime())) {
-            formattedTimestamp = timestamp.toLocaleString(); 
-        }
+      const timestamp = new Date(timestampRaw);
+      if (!isNaN(timestamp.getTime())) {
+        formattedTimestamp = timestamp.toLocaleString();
+      }
     }
-
-    const commentItem = document.createElement("div");
-    commentItem.classList.add("comment-item", "card", "mb-2", "p-2", "shadow-sm");
-
-    commentItem.innerHTML = `
-        <div class="d-flex align-items-center">
-            <div>
-                <strong class="d-block">${userName}</strong>
-                <small class="text-muted">${formattedTimestamp}</small>
-            </div>
-        </div>
-        <p class="mt-2 mb-1">${comment.comment_text}</p>
-    `;
-
-    commentsList.appendChild(commentItem);
 }
 });
 
-
 //C-- Add Product form
 document.addEventListener("DOMContentLoaded", function () {
-    const addProductBtn = document.querySelector(".add-product-btn");
-    const addProductModal = new bootstrap.Modal(document.getElementById("addProductModal"));
+  const addProductBtn = document.querySelector(".add-product-btn");
+  const addProductModal = new bootstrap.Modal(
+    document.getElementById("addProductModal")
+  );
 
-    addProductBtn.addEventListener("click", function () {
-        addProductModal.show();
+  addProductBtn.addEventListener("click", function () {
+    addProductModal.show();
+  });
+
+  document.getElementById("addProductModal").addEventListener("hidden.bs.modal", function () {
+    document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
+        backdrop.remove();
     });
+    document.body.classList.remove("modal-open");
+  })
 });
 
 // C-- Upload image to Add Product form
@@ -567,76 +423,264 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //shopping cart
 
-document.addEventListener('DOMContentLoaded', function() {
-    const addToCartBtn = document.getElementById('addToCartBtn');
-    const quantityInput = document.getElementById('quantity');
-    const cartItemsContainer = document.getElementById('item');
-    const cartTotalElement = document.getElementById('cartTotal');
-    const notification = document.getElementById('notification');
+document.addEventListener("DOMContentLoaded", function () {
+  const addToCartBtn = document.getElementById("addToCartBtn");
+  const quantityInput = document.getElementById("quantity");
+  const cartItemsContainer = document.getElementById("item");
+  const cartTotalElement = document.getElementById("cartTotal");
+  const notification = document.getElementById("notification");
 
-    let cart = [];
+  let cart = [];
 
-    addToCartBtn.addEventListener('click', function() {
+  addToCartBtn.addEventListener("click", function () {
     // Get the innerText of the price element
-    const priceText = document.getElementById('modalProductPrice').innerText; // e.g., "Price: £10.00"
+    const priceText = document.getElementById("modalProductPrice").innerText; // e.g., "Price: £10.00"
 
     // Remove the "Price: £" part to extract the number
-    const priceValue = parseFloat(priceText.replace('Price: £', '')); // Extracts "10.00" and converts to number
-    
-        // Create the product object
-        const product = {
-        title: document.getElementById('modalProductTitle').innerText,
-        variety: document.getElementById('modalProductVariety').innerText,
-        price: priceValue, // Use the extracted numeric value
-        quantity: parseInt(quantityInput.value),
-        image: document.getElementById('modalProductImage').src
+    const priceValue = parseFloat(priceText.replace("Price: £", "")); // Extracts "10.00" and converts to number
+
+    // Create the product object
+    const product = {
+      title: document.getElementById("modalProductTitle").innerText,
+      variety: document.getElementById("modalProductVariety").innerText,
+      price: priceValue, // Use the extracted numeric value
+      quantity: parseInt(quantityInput.value),
+      image: document.getElementById("modalProductImage").src,
     };
 
-        // Check if the product is already in the cart
-        const existingProductIndex = cart.findIndex(item => item.title === product.title && item.variety === product.variety);
+    // Check if the product is already in the cart
+    const existingProductIndex = cart.findIndex(
+      (item) => item.title === product.title && item.variety === product.variety
+    );
 
-        if (existingProductIndex !== -1) {
-            // Update the quantity if the product is already in the cart
-            cart[existingProductIndex].quantity += product.quantity;
-        } else {
-            // Add the product to the cart if it's not already there
-            cart.push(product);
-        }
+    if (existingProductIndex !== -1) {
+      // Update the quantity if the product is already in the cart
+      cart[existingProductIndex].quantity += product.quantity;
+    } else {
+      // Add the product to the cart if it's not already there
+      cart.push(product);
+    }
 
-        updateCartDisplay();
+    updateCartDisplay();
 
-        // Show notification
-        notification.style.display = 'block';
-        setTimeout(() => {
-            notification.style.display = 'none';
-        }, 3000); // Hide notification after 3 seconds
+    // Show notification
+    notification.style.display = "block";
+    setTimeout(() => {
+      notification.style.display = "none";
+    }, 3000); // Hide notification after 3 seconds
 
-        // Open the offcanvas shopping cart
-        // const offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasRight'));
-        // offcanvas.show();
-    });
+    // Open the offcanvas shopping cart
+    // const offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasRight'));
+    // offcanvas.show();
+  });
 
-    function updateCartDisplay() {
-        cartItemsContainer.innerHTML = ''; // Clear the current cart display
-        let total = 0;
+  function updateCartDisplay() {
+    cartItemsContainer.innerHTML = ""; // Clear the current cart display
+    let total = 0;
 
-        cart.forEach(item => {
-            const cartItem = document.createElement('div');
-            cartItem.className = 'cart-item';
-            cartItem.innerHTML = `
+    cart.forEach((item) => {
+      const cartItem = document.createElement("div");
+      cartItem.className = "cart-item";
+      cartItem.innerHTML = `
                 <img src="${item.image}" alt="${item.title}" width="50">
                 <div>
                     <h6>${item.title} - ${item.variety}</h6>
                     <p>£${item.price.toFixed(2)} x ${item.quantity}</p>
                 </div>
             `;
-            cartItemsContainer.appendChild(cartItem);
+      cartItemsContainer.appendChild(cartItem);
 
-            // Calculate the total price
-            total += item.price * item.quantity;
-        });
+      // Calculate the total price
+      total += item.price * item.quantity;
+    });
 
-        // Update the total price
-        cartTotalElement.innerText = total.toFixed(2);
+    // Update the total price
+    cartTotalElement.innerText = total.toFixed(2);
+  }
+});
+
+async function fetchProductTypeByCategory(categoryId) {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("User is not authenticated. Please log in!");
+    return;
+  }
+  try {
+    const response = await fetch(
+      `https://field-to-fork-backend.onrender.com/products/type/${categoryId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch types by category.");
     }
+
+    return await response.json();
+  } catch (error) {
+    console.log("Error fetching types:", error);
+  }
+}
+
+async function createProductOnServer(product) {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("User is not authenticated. Please log in!");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+        "https://field-to-fork-backend.onrender.com/products/",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token,
+            },
+            body: JSON.stringify(product),
+        }
+    );
+    return await response.json();
+
+  } catch (error) {
+    console.log("Error fetching types:", error);
+    return null;
+  }
+}
+
+// API request to Add new product
+document.addEventListener("DOMContentLoaded", function () {
+  const addProductForm = document.getElementById("addProductForm");
+  const typeDropdown = document.getElementById("typeDropdown");
+  const addProductModal = new bootstrap.Modal(
+    document.getElementById("addProductModal")
+  );
+
+  // Dynamically adding product types
+  const categoryDropdown = document.getElementById("categoryDropdown");
+  categoryDropdown.addEventListener("change", async function (e) {
+    // Check selection
+    const selectedCategory = this.options[this.selectedIndex];
+    const categoryId = selectedCategory.getAttribute("data-id");
+    // Clear types list
+    typeDropdown.options.length = 1;
+    typeDropdown.selectedIndex = 0;
+    typeDropdown.dispatchEvent(new Event("change"));
+    if (categoryId) {
+      // Fetch product types by category
+      data = await fetchProductTypeByCategory(categoryId);
+      // For each type add a child to the corresponding dropdown list
+      for (const idx in data) {
+        const item = data[idx];
+
+        let option = document.createElement("option");
+        option.value = item.type_name;
+        option.textContent = item.type_name;
+        option.setAttribute("data-type-id", item.type_id);
+        option.setAttribute("data-price-type-id", item.price_type_id);
+        option.setAttribute("data-price-type-name", item.price_type_name);
+        typeDropdown.appendChild(option);
+      }
+    }
+  });
+
+  typeDropdown.addEventListener("change", function (e) {
+    const selection = this.options[this.selectedIndex];
+    const priceTypeName = selection.getAttribute("data-price-type-name");
+    const priceLabel = document.getElementById("productPriceLabel");
+    priceLabel.innerText = priceTypeName
+      ? `Price (£) per ${priceTypeName}`
+      : "Price (£)";
+  });
+
+  addProductForm.addEventListener("submit", async function (e) {
+    e.preventDefault(); // Prevent page refresh
+
+    const categoryId =
+      categoryDropdown.options[categoryDropdown.selectedIndex].getAttribute(
+        "data-id"
+      );
+    const typeId =
+      typeDropdown.options[typeDropdown.selectedIndex].getAttribute(
+        "data-type-id"
+      );
+    const variety = document.getElementById("productVariety").value.trim();
+    const description = document
+      .getElementById("productDescription")
+      .value.trim();
+    const price = parseFloat(document.getElementById("productPrice").value).toFixed(2);
+
+    if (!categoryId || !typeId || !variety || !description || !price) {
+      alert("Please fill in all fields and select an image!");
+      return;
+    }
+
+    // TODO: Image upload
+    const imageUrl = '';
+    console.log(`UserId: ${localStorage}`);
+
+    // Create a new product object
+    const newProduct = {
+      type_id: typeId,
+      variety: variety,
+      active: true,
+      description: description,
+      image_url: imageUrl,
+      price: price
+    };
+
+    try {
+        await createProductOnServer(newProduct);
+        const prods = await fetchProducts();
+        renderProducts(prods);
+
+    } catch (error) {
+        console.log("Error fetching types:", error);
+        alert("Unable to store product!");
+
+    } finally {
+        // Close modal and reset form
+        addProductModal.hide();
+        addProductForm.reset();
+    }
+  });
+
+  // Function to convert image file to Base64
+  function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
+  // Function to dynamically add a product to the UI
+  function addProductToUI(product) {
+    const productCard = document.createElement("div");
+    productCard.classList.add("col-md-4");
+
+    productCard.innerHTML = `
+            <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}">
+                <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
+                <div class="card-body">
+                    <h4 class="card-title product-title">${product.name}</h4>
+                    <p class="card-text product-id">id:${product.product.product_id}<p>
+                    <p class="card-text product-description">${product.description}</p>
+                    <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
+                    <p class="card-text"><strong>Price: £</strong>${product.price}</p>
+                    <a href="#" class="btn btn-outline-success">See More...</a>
+                </div>
+            </div>
+        `;
+
+    // Append to the product container
+    productContainer.prepend(productCard);
+  }
 });

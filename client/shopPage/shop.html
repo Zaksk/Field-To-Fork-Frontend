@@ -9,6 +9,7 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>    
     <link rel="stylesheet" href="../shopPage/shop.css">
+    <!-- <script type="module" src="@supabase/supabase-js" defer></script> -->
     <script defer src="./shop.js"></script>
 </head>
 <body>
@@ -43,9 +44,10 @@
             <a class="navbar-brand d-flex align-items-center" href="#">
                 <img src="../assets/field2forklogo.jpg" class="field2fork-logo" style="max-height: 50px; width: auto;">
             </a>
+            <button class="btn btn-success" id="dataBtn">View historic price ranges</button>
             <div class="search-bar d-flex flex-grow-1 justify-content-end">
                 <input type="text" class="form-control me-2 w-50" placeholder="Search" id="searchBox">
-                <button class="btn btn-primary">Search</button>
+                <button class="btn btn-success">Search</button>
             </div>
         </div>
     </nav>
@@ -70,6 +72,7 @@
             <div id="item"></div>
             <h5>Total: £<span id="cartTotal">0.00</span></h5>
         </div>
+        <button class="btn btn-success">Proceed to checkout</button>
         </div>
     </div>
 
@@ -100,6 +103,7 @@
             </div>
 
             <!-- Add Postcode Input -->
+            
     <div class="postcode-input mt-3">
         <label for="postcode" class="form-label">Enter your postcode:</label>
         <input type="text" class="form-control" id="postcode" placeholder="e.g., SW1A 1AA">
@@ -170,26 +174,31 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" id="addProductCloseButton" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addProductForm">
+                    
                     <div class="mb-3">
-                        <label for="productName" class="form-label">Product Name</label>
-                        <input type="text" class="form-control" id="productName" required>
+                        <label for="categoryDropdown" class="form-label">Select a Category</label>
+                        <select class="form-control" id="categoryDropdown" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="fruit" data-id="1">Fruit</option>
+                            <option value="vegetable" data-id="2">Vegetable</option>
+                            <option value="potplants" data-id="3">Potted plant</option>
+                            <option value="cutflowers" data-id="4">Cut flowers</option>
+                            <option value="other" data-id="5">Other</option>
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <p>Please select the type of produce you are selling:</p>
-                        <input type="radio" name="selectOption" value="fruit" id="selectFruit"/>
-                        <label for="productCategory" class="form-label">Fruit</label>
-                        <input type="radio" name="selectOption" value="vegetable" id="selectVegetable"/>
-                        <label for="productCategory" class="form-label">Vegetable</label>
-                        <input type="radio" name="selectOption" value="potplants" id="selectPotPlant"/>
-                        <label for="productCategory" class="form-label">Potted plant</label>
-                        <input type="radio" name="selectOption" value="cutflowers" id="selectCutFlowers"/>
-                        <label for="productCategory" class="form-label">Cut flowers</label>
-                        <input type="radio" name="selectOption" value="other" id="selectOther"/>
-                        <label for="productCategory" class="form-label">Other</label>
+                        <label for="productType" class="form-label">Product Type</label>
+                        <select class="form-control" id="typeDropdown" required>
+                            <option value="" disabled selected>Select a type</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productVariety" class="form-label">Variety:</label>
+                        <input type="text" class="form-control" id="productVariety" placeholder="Enter variety..." required>
                     </div>
                     <div class="mb-3">
                         <label for="productDescription" class="form-label">Product Description</label>
@@ -197,18 +206,14 @@
                     </div>
                     <div class="mb-3">
                         <label for="productImageUrl" class="form-label">Product Image URL</label>
-                        <input type="file" class="form-control" id="productImage" accept="image/*" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="proudctLocation" class="form-label">Location of available product (Enter your postcode)</label>
-                        <input type="text" class="form-control" id="productPostcode" required>
+                        <input type="file" class="form-control" id="    " accept="image/*" required>
                     </div>
                     <div class="mb-3">
                         <p>Suggested price range to list produce for sale at: </p>
                         <p id="priceRange"><strong></strong></p>
                     </div>
                     <div class="mb-3">
-                        <label for="productPrice" class="form-label">Price (£)</label>
+                        <label for="productPrice" id="productPriceLabel" class="form-label">Price (£)</label>
                         <input type="number" min="0" step="0.01" class="form-control" id="productPrice" required>
                     </div>
                     <button type="submit" class="btn btn-success">Add Product</button>
