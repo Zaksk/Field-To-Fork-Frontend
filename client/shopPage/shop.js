@@ -684,3 +684,45 @@ document.addEventListener("DOMContentLoaded", function () {
     productContainer.prepend(productCard);
   }
 });
+
+// Add search functionality
+document.addEventListener("DOMContentLoaded", async () => {
+    const productContainer = document.getElementById("productContainer");
+    const searchBox = document.getElementById("searchBox");
+  
+    // Fetch all products once when the page loads
+    const allProducts = await fetchProducts();
+  
+    // Function to filter products based on search input
+    function filterProducts(searchTerm) {
+      searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
+  
+      const filteredProducts = allProducts.filter((product) => {
+        const productTitle = product.type.toLowerCase(); // Get the product title
+        const productDescription = product.product.description.toLowerCase(); // Get the product description
+  
+        // Show the product card if the title or description matches the search term
+        return productTitle.includes(searchTerm) || productDescription.includes(searchTerm);
+      });
+  
+      // Render the filtered products
+      renderProducts(filteredProducts);
+    }
+  
+    // Event listener for the search box input
+    searchBox.addEventListener("input", function (event) {
+      const searchTerm = this.value.trim(); // Get the value of the search box and trim whitespace
+  
+      if (searchTerm === "") {
+        // If the search box is empty, show all products
+        renderProducts(allProducts);
+      } else {
+        // Otherwise, filter products based on the search term
+        filterProducts(searchTerm);
+      }
+    });
+  
+    // Render all products initially
+    renderProducts(allProducts);
+  });
+   
