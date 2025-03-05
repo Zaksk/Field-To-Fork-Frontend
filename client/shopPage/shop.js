@@ -65,36 +65,64 @@ function renderProducts(products) {
   });
 }
 
-// API request to fetch & display products cards
+// API request to fetch & display products cards; and add  filter and search functionality
 document.addEventListener("DOMContentLoaded", async () => {
-  const allProducts = await fetchProducts();
-  renderProducts(allProducts);
-
-  function filterProducts(category) {
-    let filteredProducts;
-
-    if (category === "all") {
-        return allProducts;
+    const productContainer = document.getElementById("productContainer");
+    const searchBox = document.getElementById("searchBox");
+  
+    // Fetch all products once when the page loads
+    const allProducts = await fetchProducts();
+  
+    // Function to filter products based on both search term and category
+    function filterProducts(searchTerm, category) {
+      let filteredProducts = allProducts;
+  
+      // Step 1: Filter by category
+      if (category !== "all") {
+        filteredProducts = filteredProducts.filter(
+          (product) => product.category === category
+        );
+      }
+  
+      // Step 2: Filter by search term
+      if (searchTerm) {
+        searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
+        filteredProducts = filteredProducts.filter((product) => {
+          const productTitle = product.type.toLowerCase(); // Get the product title
+          const productDescription = product.product.description.toLowerCase(); // Get the product description
+          return (
+            productTitle.includes(searchTerm) || productDescription.includes(searchTerm)
+          );
+        });
+      }
+  
+      // Render the filtered products
+      renderProducts(filteredProducts);
     }
-    
-    return allProducts.filter((product) => {
-        console.log(`Checking product with category: ${product.category}`);
-        return product.category === category;
+  
+    // Event listener for the search box input
+    searchBox.addEventListener("input", function (event) {
+      const searchTerm = this.value.trim(); // Get the value of the search box and trim whitespace
+      const selectedCategory = document.querySelector(
+        'input[type="radio"][name="product"]:checked'
+      ).value; // Get the currently selected category
+      filterProducts(searchTerm, selectedCategory); // Filter products based on search term and category
     });
-  }
-
-  // Event listener for filter change
-  document
-    .querySelectorAll('input[type="radio"][name="product"]')
-    .forEach((radio) => {
-      radio.addEventListener("change", function () {
-        const selectedCategory = this.value;
-        console.log("Selected Category from radio button:", selectedCategory);
-        const filteredProducts = filterProducts(selectedCategory);
-        renderProducts(filteredProducts);
+  
+    // Event listener for filter change (category radio buttons)
+    document
+      .querySelectorAll('input[type="radio"][name="product"]')
+      .forEach((radio) => {
+        radio.addEventListener("change", function () {
+          const selectedCategory = this.value; // Get the selected category
+          const searchTerm = searchBox.value.trim(); // Get the current search term
+          filterProducts(searchTerm, selectedCategory); // Filter products based on search term and category
+        });
       });
-    });
-});
+  
+    // Render all products initially
+    filterProducts("", "all"); // Show all products when the page loads
+  });
 
 // Display the card when clicked
 document.addEventListener("DOMContentLoaded", function () {
@@ -685,44 +713,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Add search functionality
-document.addEventListener("DOMContentLoaded", async () => {
-    const productContainer = document.getElementById("productContainer");
-    const searchBox = document.getElementById("searchBox");
-  
-    // Fetch all products once when the page loads
-    const allProducts = await fetchProducts();
-  
-    // Function to filter products based on search input
-    function filterProducts(searchTerm) {
-      searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
-  
-      const filteredProducts = allProducts.filter((product) => {
-        const productTitle = product.type.toLowerCase(); // Get the product title
-        const productDescription = product.product.description.toLowerCase(); // Get the product description
-  
-        // Show the product card if the title or description matches the search term
-        return productTitle.includes(searchTerm) || productDescription.includes(searchTerm);
-      });
-  
-      // Render the filtered products
-      renderProducts(filteredProducts);
-    }
-  
-    // Event listener for the search box input
-    searchBox.addEventListener("input", function (event) {
-      const searchTerm = this.value.trim(); // Get the value of the search box and trim whitespace
-  
-      if (searchTerm === "") {
-        // If the search box is empty, show all products
-        renderProducts(allProducts);
-      } else {
-        // Otherwise, filter products based on the search term
-        filterProducts(searchTerm);
-      }
-    });
-  
-    // Render all products initially
-    renderProducts(allProducts);
-  });
+
    
