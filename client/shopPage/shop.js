@@ -5,10 +5,18 @@ const productDescription = document.getElementById("productDescription");
 const productContainer = document.getElementById("productContainer");
 const productCards = document.querySelectorAll(".product-card");
 const dataBtn = document.getElementById("dataBtn");
+const logoutBtn = document.getElementById("logoutBtn");
 
 dataBtn.addEventListener("click", () => {
   window.location.assign("../visualsPage/data.html");
 });
+
+logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.assign("../loginPage/login.html");
+})
+
+
 // URLS
 const apiUrl = "https://field-to-fork-backend.onrender.com";
 const productsUrl = `${apiUrl}/products/`;
