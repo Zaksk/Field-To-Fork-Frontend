@@ -303,6 +303,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       const newComment = await response.json();
+
       displayComment(newComment);
       commentText.value = ""; // Clear the comment text
     } catch (error) {
@@ -316,7 +317,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("Received comment data:", comment);
 
-    const userName = comment.user_name || comment.username || "Anonymous";
+    const storedUserName = localStorage.getItem("username");
+    const userName = comment.user_name || comment.username || storedUserName || "Anonymous";
     const timestampRaw = comment.timestamp || comment.created_at || comment.date;
 
     let formattedTimestamp = "Unknown time";
@@ -348,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <p class="mt-2 mb-1">${comment.comment_text || comment.comment?.comment_text}</p>
     `;
 
-    commentsList.prepend(commentItem); // Prepend to show latest comment on top
+    commentsList.prepend(commentItem); // Show the latest comment at the top
 }
 });
 
