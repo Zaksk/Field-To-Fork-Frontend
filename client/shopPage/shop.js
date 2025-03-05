@@ -486,194 +486,84 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Distance calculator
+document.addEventListener("DOMContentLoaded", () => {
+    const productContainer = document.getElementById("productContainer");
+    const sortByDistanceButton = document.getElementById("sortByDistance");
+    const postcodeInput = document.getElementById("postcode");
+    let lastUsedPostcode = "";
+    const cachedDistances = {}; // Cache API results
 
-// Function to get coordinates (latitude and longitude) for a given postcode
-async function getCoordinates(postcode) {
-    const response = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
-    const data = await response.json();
-    if (data.status === 200) {
-        return {
-            latitude: data.result.latitude,
-            longitude: data.result.longitude,
-        };
-    } else {
-        throw new Error(`Postcode ${postcode} not found.`);
-    }
-}
+    sortByDistanceButton.addEventListener("click", async () => {
+        const userPostcode = postcodeInput.value.trim();
+        if (!userPostcode) return alert("Please enter your postcode.");
 
-// Haversine formula to calculate the distance between two coordinates
-function haversine(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Radius of the Earth in kilometers
-    const toRad = (angle) => (angle * Math.PI) / 180; // Function to convert degrees to radians
+        if (userPostcode !== lastUsedPostcode) {
+            lastUsedPostcode = userPostcode;
+            Object.keys(cachedDistances).forEach(key => delete cachedDistances[key]);
+        }
 
-    const φ1 = toRad(lat1);
-    const φ2 = toRad(lat2);
-    const Δφ = toRad(lat2 - lat1);
-    const Δλ = toRad(lon2 - lon1);
-
-    const a =
-        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const distanceInKm = R * c; // Distance in kilometers
-    const distanceInMiles = distanceInKm * 0.621371; // Convert kilometers to miles
-    return distanceInMiles;
-}
-
-// Function to get the distance between the postcodes
-async function getDistance(targetPostcode, productPostcode) {
-    try {
-        const coordsTarget = await getCoordinates(targetPostcode);
-        const coordsProduct = await getCoordinates(productPostcode);
-        const distance = haversine(
-            coordsTarget.latitude,
-            coordsTarget.longitude,
-            coordsProduct.latitude,
-            coordsProduct.longitude
-        );
-        return distance; // Return the calculated distance
-    } catch (error) {
-        console.error(error.message);
-        return null; // Return null in case of error
-    }
-}
-
-
-
-
-
-// Add search functionality
-$(document).ready(function () {
-    // Store all product cards in a variable
-    
-    let allProducts = []
-
-      // Function to filter products based on search input
-    function filterProducts(searchTerm) {
-        searchTerm = searchTerm.toLowerCase(); // Convert search term to lowercase for case-insensitive comparison
-
-        const filteredProducts = allProducts.filter(product =>
-            product.name.toLowerCase().includes(searchTerm) ||
-            product.description.toLowerCase().includes(searchTerm)
-        );
-
-        renderProducts(filteredProducts); // Re-render with filtered results
-    }
-
-    // Event listener for the search box input
-    $("#searchBox").on("input", function (event) {
-        event.preventDefault(); // Prevent form submission
-        const searchTerm = $(this).val(); // Get the value of the search box
-        filterProducts(searchTerm); // Filter products based on the search term
+        await sortProductsByDistance(userPostcode);
     });
+
+    async function fetchCoordinates(postcode) {
+        try {
+            const response = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
+            if (!response.ok) throw new Error("Invalid postcode");
+            const { result } = await response.json();
+            return { lat: result.latitude, lon: result.longitude };
+        } catch (error) {
+            console.error("Error fetching postcode data:", error);
+            return null;
+        }
+    }
+
+    function calculateDistance({ lat: lat1, lon: lon1 }, { lat: lat2, lon: lon2 }) {
+        const R = 6371, dLat = (lat2 - lat1) * (Math.PI / 180), dLon = (lon2 - lon1) * (Math.PI / 180);
+        const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) ** 2;
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) * 0.621371; // Convert km to miles
+    }
+
+    async function getDistance(postcode1, postcode2) {
+        const cacheKey = `${postcode1}-${postcode2}`;
+        if (cachedDistances[cacheKey] !== undefined) return cachedDistances[cacheKey];
+
+        const coords1 = await fetchCoordinates(postcode1);
+        const coords2 = await fetchCoordinates(postcode2);
+        if (!coords1 || !coords2) return null;
+
+        return cachedDistances[cacheKey] = calculateDistance(coords1, coords2);
+    }
+
+    async function sortProductsByDistance(userPostcode) {
+        try {
+            const productWrappers = [...productContainer.querySelectorAll(".col-md-4")];
+            if (!productWrappers.length) return console.error("No product cards found.");
+
+            let products = await Promise.all(productWrappers.map(async (wrapper) => {
+                const card = wrapper.querySelector(".product-card");
+                const productPostcode = card.dataset.postcode;
+                let distance = card.dataset.distance ? parseFloat(card.dataset.distance) : await getDistance(userPostcode, productPostcode);
+                if (distance === null) return null;
+                card.dataset.distance = distance;
+                return { wrapper, card, distance };
+            }));
+
+            products = products.filter(Boolean).sort((a, b) => a.distance - b.distance);
+            products.forEach(({ wrapper, card, distance }) => {
+                productContainer.appendChild(wrapper);
+                const distanceElement = card.querySelector(".distance-value");
+                if (distanceElement) distanceElement.textContent = `${distance.toFixed(2)} miles`;
+            });
+        } catch (error) {
+            console.error("Error sorting products by distance:", error);
+            alert("Error sorting products by distance. Please try again.");
+        }
+    }
 });
 
 
 
-// Function to sort products by distance and update the UI
-async function sortProductsByDistance(userPostcode) {
-    try {
-        const productCards = document.querySelectorAll(".product-card");
-        const productContainer = document.getElementById("productContainer");
-
-        // Calculate distances for all products
-        for (const card of productCards) {
-            const productPostcode = card.dataset.postcode;
-            const distance = await getDistance(userPostcode, productPostcode);
-
-            // Update the distance on the product card
-            const distanceElement = card.querySelector(".distance-value");
-            if (distanceElement) {
-                distanceElement.textContent = `${distance.toFixed(2)} miles`;
-            }
-
-            // Store the distance in a data attribute for sorting
-            card.dataset.distance = distance;
-        }
-
-        // Sort products by distance
-        const sortedCards = Array.from(productCards).sort((a, b) => {
-            return a.dataset.distance - b.dataset.distance;
-        });
-
-        // Clear the container before appending sorted cards
-        productContainer.innerHTML = "";
-
-        // Create a new row for every 3 cards
-        let row;
-        sortedCards.forEach((card, index) => {
-            if (index % 3 === 0) {
-                // Create a new row for every 3 cards
-                row = document.createElement("div");
-                row.className = "row g-4";
-                productContainer.appendChild(row);
-            }
-
-            // Create a column for the card
-            const col = document.createElement("div");
-            col.className = "col-md-4";
-            col.appendChild(card);
-            row.appendChild(col);
-        });
-    } catch (error) {
-        console.error("Error sorting products by distance:", error);
-        alert("Invalid postcode or API error. Please try again.");
-    }
-}
-
-// Function to reset product cards to their original unordered state
-function resetProductCards() {
-    
-
-    // Clear the container before appending original cards
-    productContainer.innerHTML = "";
-
-    // Create a new row for every 3 cards
-    let row;
-    productCards.forEach((card, index) => {
-        if (index % 3 === 0) {
-            // Create a new row for every 3 cards
-            row = document.createElement("div");
-            row.className = "row g-4";
-            productContainer.appendChild(row);
-        }
-
-        // Create a column for the card
-        const col = document.createElement("div");
-        col.className = "col-md-4";
-        col.appendChild(card);
-        row.appendChild(col);
-    });
-
-    // Clear the distance values on the product cards
-    productCards.forEach((card) => {
-        const distanceElement = card.querySelector(".distance-value");
-        if (distanceElement) {
-            distanceElement.textContent = "N/A"; // Reset distance value
-        }
-    });
-}
-
-// Event listener for the "Sort by Distance" button
-document.getElementById("sortByDistance").addEventListener("click", function () {
-    const userPostcode = document.getElementById("postcode").value.trim();
-    if (userPostcode) {
-        sortProductsByDistance(userPostcode);
-    } else {
-        // If the postcode input is empty, reset the product cards
-        resetProductCards();
-    }
-});
-
-// Event listener for the postcode input field
-document.getElementById("postcode").addEventListener("input", function () {
-    const userPostcode = this.value.trim();
-    if (!userPostcode) {
-        // If the postcode input is cleared, reset the product cards
-        resetProductCards();
-    }
-});
 
 //shopping cart
 
