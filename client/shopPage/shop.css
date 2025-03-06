@@ -21,6 +21,26 @@
 .main-sidebar {
   margin-top: 10px;
   padding-left: 10px;
+  padding-left: 30px;
+}
+
+.btn-div {
+  padding-right: 30px;
+}
+
+input[type="radio"] {
+  accent-color: #0A7029;
+  margin-top: 15px
+}
+
+.product-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 6em;
+  line-height: 1.5em;
 }
 
 .signin-up{

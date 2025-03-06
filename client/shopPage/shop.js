@@ -43,35 +43,77 @@ async function fetchProducts() {
     }
 }
 
-// Renders the list of products
 function renderProducts(products) {
-  productContainer.innerHTML = "";
+    productContainer.innerHTML = "";
+  
+    if (products.length === 0) {
+        productContainer.innerHTML = "<p>No products found for this category.</p>";
+    }
+  
+    function isCapitalized(str) {
+        return str.split(" ").every(word => word.charAt(0) === word.charAt(0).toUpperCase());
+    }
+  
+    function capitalizeWords(str) {
+        return str.replace(/\b\w/g, char => char.toUpperCase());
+    }
 
-  if (products.length === 0) {
-    productContainer.innerHTML = "<p>No products found for this category.</p>";
-  }
+    function isUppercase(str) {
+        return str === str.toUpperCase();
+    }
 
-  products.forEach((product) => {
-    const productCard = document.createElement("div");
-    productCard.classList.add("col-md-4");
-
-    productCard.innerHTML = `
-            <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}" data-product-id="${product.id}">
-                <img src="${product.product.image_url}" class="card-img-top product-image" alt="${product.type}" data-product-id="${product.id}">
-                <div class="card-body">
-                    <h4 class="card-title product-title">${product.type}</h4>
-                    <p class="card-text product-id">id:${product.product.product_id}<p>
-                    <p class="card-text product-description">${product.product.description}</p>
-                    <p class="card-texr product-postcode"><strong>Location: </strong>${product.postcode}<p>
-                    <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
-                    <p class="card-text product-price"><strong>Price: £</strong>${product.product.price}</p>
-                    <a href="#" class="btn btn-outline-success">See More...</a>
-                </div>
-            </div>
-        `;
-    productContainer.appendChild(productCard);
-  });
+    products.forEach((product) => {
+        const productCard = document.createElement("div");
+        productCard.classList.add("col-md-4");
+  
+        // Check and capitalize Product Type
+        if (!isCapitalized(product.type)) {
+            console.warn(`Product Type not capitalized: "${product.type}"`);
+            product.type = capitalizeWords(product.type);
+        }
+  
+        // // Check and capitalize Description
+        // if (!isCapitalized(product.product.description)) {
+        //     console.warn(`Product Description not capitalized: "${product.product.description}"`);
+        //     product.product.description = capitalizeWords(product.product.description);
+        // }
+  
+        // Ensure Postcode is fully uppercase
+        if (!isUppercase(product.postcode)) {
+            console.warn(`Postcode not fully capitalized: "${product.postcode}"`);
+            product.postcode = product.postcode.toUpperCase();
+        }
+        const productVariety = capitalizeWords(product.product.variety.replace(/_/g, " "));     
+        productCard.innerHTML = `
+              <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}" data-product-id="${product.id}">
+                  <img src="${product.product.image_url}" class="card-img-top product-image" alt="${product.type}" data-product-id="${product.id}">
+                  <div class="card-body">
+                      <h4 class="card-title product-title">${product.type}</h4>
+                      <p class="card-text product-id">id:${product.product.product_id}</p>
+                      <p class="card-text product-variety">${productVariety}</p>
+                      <p class="card-text product-description">${product.product.description}</p>
+                      <p class="card-text product-postcode"><strong>Location: </strong>${product.postcode}</p>
+                      <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
+                      <p class="card-text product-price"><strong>Price: £</strong>${product.product.price}</p>
+                      <a href="#" class="btn btn-outline-success seemore-btn">See More...</a>
+                  </div>
+              </div>
+          `;
+        productContainer.appendChild(productCard);
+    });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const viewDetailButtons = document.querySelectorAll(".seemore-btn");
+    const modalDescription = document.querySelector(".product-description");
+    
+    viewDetailButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const fullDescription = this.getAttribute("data-description");
+            modalDescription.textContent = fullDescription;
+        })
+    })
+})
 
 // API request to fetch & display products cards; and add  filter and search functionality
 document.addEventListener("DOMContentLoaded", async () => {
@@ -274,7 +316,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Check if a product has been selected
     if (!productId) {
       alert("No product selected. Please select a product first!");
       return;
@@ -287,30 +328,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const commentData = {
-      product_id: productId, // Use the selected product ID
+      product_id: productId,
       comment_text: commentContent,
     };
 
     try {
-        const data = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-          body: JSON.stringify(commentData),
-        };
-        console.log(`Comment: ${JSON.stringify(data)}`);
-      const response = await fetch(`${commentsUrl}/`, data);
+      const response = await fetch(`${commentsUrl}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(commentData),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to post comment.");
       }
 
-      const newComment = await response.json();
+      // Wait for the comment to be stored in the database
+      await response.json();
 
-      displayComment(newComment);
-      commentText.value = ""; // Clear the comment text
+      // Clear the input field
+      commentText.value = "";
+
+      // Fetch all comments again, including the new one
+      fetchComments(productId);
     } catch (error) {
       console.log("Error posting comment:", error);
       alert("Failed to post comment. Please try again.");
@@ -399,13 +442,12 @@ document.addEventListener("DOMContentLoaded", function () {
 //     });
 // });
 
-// Distance calculator
 document.addEventListener("DOMContentLoaded", () => {
     const productContainer = document.getElementById("productContainer");
     const sortByDistanceButton = document.getElementById("sortByDistance");
     const postcodeInput = document.getElementById("postcode");
     let lastUsedPostcode = "";
-    const cachedDistances = {}; // Cache API results
+    const cachedDistances = {};
 
     sortByDistanceButton.addEventListener("click", async () => {
         const userPostcode = postcodeInput.value.trim();
@@ -434,7 +476,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function calculateDistance({ lat: lat1, lon: lon1 }, { lat: lat2, lon: lon2 }) {
         const R = 6371, dLat = (lat2 - lat1) * (Math.PI / 180), dLon = (lon2 - lon1) * (Math.PI / 180);
         const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) ** 2;
-        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) * 0.621371; // Convert km to miles
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) * 0.621371; 
     }
 
     async function getDistance(postcode1, postcode2) {

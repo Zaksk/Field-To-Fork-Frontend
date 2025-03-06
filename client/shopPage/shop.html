@@ -13,31 +13,6 @@
     <script defer src="./shop.js"></script>
 </head>
 <body>
-    <!-- <header>
-        <div class="signin-up">
-            <a href="#">Sign In / </a>
-            <a href="#">Sign Up</a>
-        </div>
-        <div class="above-nav">
-            <p class="logo">Field2Fork</p>
-            <div class="search-bar">
-                <input type="text" placeholder="Search">
-                <button>Search</button>
-            </div>
-            <div class="cart-info">
-                <!- <i class='bx bx-heart' ></i> -->
-                <!-- <span>Shopping cart: <strong>£10.00</strong></span>
-                <i class='bx bx-shopping-bag'></i>
-            </div>
-        </div> -->
-        <!-- <nav>
-            <ul>
-            <a href="#">Home</a>
-            <a href="#">Shop</a>
-            <a href="#">Prices</a>
-        </ul>
-        </nav> -->
-    <!-- </header> -->
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid d-flex align-items-center justify-content-between">
@@ -49,13 +24,13 @@
                 <input type="text" class="form-control me-2 w-50" placeholder="Search" id="searchBox">
                 <button class="btn btn-success">Search</button>
             </div>
-            <button class="btn btn-danger" id="logoutBtn">Logout</button>
+            <button class="btn btn-danger logout-btn" id="logoutBtn">Logout</button>
         </div>
     </nav>
 
     <div class="banner"></div>
     
-    <div class="d-flex justify-content-between" style="padding: 10px">
+    <div class="d-flex justify-content-between btn-div" style="padding: 10px">
         <div class="add-product">
             <button class="add-product-btn btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">Add new product</button>
         </div>
@@ -82,7 +57,7 @@
 <!-- side bar -->
     <main class="d-flex main-sidebar">
         <section class="sidebar d-flex flex-column">
-            <h5 class="text-center">Filter by category</h5>
+            <h5 class="text">Filter by category</h5>
             <div class="filter-container">  
                 <input type="radio" name="product" value="all" id="all" checked/>
                 <label for="all">All</label>
@@ -118,8 +93,6 @@
             <!-- Add Product button -->
             <div class="row g-4 container" id="productContainer">
                 <div class="col-md-4" id="productCard ">
-                    
-                    
             </div>
             </div>
 
@@ -140,8 +113,7 @@
                 <div class="modal-body">
                     <img src="" class="img-fluid product-image" id="modalProductImage" alt="Product Image">
                     <h4 id="modalProductTitle">Product Name</h5>
-                    <h6 id="modalProductVariety">Product Variety</h6>
-                    <p id="modalProductDescription">Product description goes here.</p>
+                    <p id="modalProductDescription" class="product-description">Product description goes here.</p>
                     <p id="modalProductPrice"><strong>Price: £</strong></p>
 
                     <div class="justify-content-between align-items-center">
