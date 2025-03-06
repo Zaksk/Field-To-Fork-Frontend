@@ -374,25 +374,25 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // C-- Upload image to Add Product form
-document.addEventListener("DOMContentLoaded", function () {
-    const productImageInput = document.getElementById("product-Image");
-    const imagePreview = document.getElementById("imagePreview");
+// document.addEventListener("DOMContentLoaded", function () {
+//     const productImageInput = document.getElementById("product-Image");
+//     const imagePreview = document.getElementById("imagePreview");
 
-    productImageInput.addEventListener("change", function (event) {
-        const file = event.target.files[0]; // Get the selected file
+//     productImageInput.addEventListener("change", function (event) {
+//         const file = event.target.files[0]; // Get the selected file
 
-        if (file) {
-            const reader = new FileReader();
+//         if (file) {
+//             const reader = new FileReader();
 
-            reader.onload = function (e) {
-                imagePreview.src = e.target.result; // Set preview image source
-                imagePreview.classList.remove("d-none"); // Show preview
-            };
+//             reader.onload = function (e) {
+//                 imagePreview.src = e.target.result; // Set preview image source
+//                 imagePreview.classList.remove("d-none"); // Show preview
+//             };
 
-            reader.readAsDataURL(file); // Convert file to Data URL for preview
-        }
-    });
-});
+//             reader.readAsDataURL(file); // Convert file to Data URL for preview
+//         }
+//     });
+// });
 
 // Distance calculator
 document.addEventListener("DOMContentLoaded", () => {
@@ -617,20 +617,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // Dynamically adding product types
   const categoryDropdown = document.getElementById("categoryDropdown");
   categoryDropdown.addEventListener("change", async function (e) {
-    // Check selection
     const selectedCategory = this.options[this.selectedIndex];
     const categoryId = selectedCategory.getAttribute("data-id");
-    // Clear types list
     typeDropdown.options.length = 1;
     typeDropdown.selectedIndex = 0;
     typeDropdown.dispatchEvent(new Event("change"));
     if (categoryId) {
-      // Fetch product types by category
-      data = await fetchProductTypeByCategory(categoryId);
-      // For each type add a child to the corresponding dropdown list
-      for (const idx in data) {
-        const item = data[idx];
-
+      const data = await fetchProductTypeByCategory(categoryId);
+      for (const item of data) {
         let option = document.createElement("option");
         option.value = item.type_name;
         option.textContent = item.type_name;
@@ -652,7 +646,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   addProductForm.addEventListener("submit", async function (e) {
-    e.preventDefault(); // Prevent page refresh
+    e.preventDefault();
 
     const categoryId =
       categoryDropdown.options[categoryDropdown.selectedIndex].getAttribute(
@@ -667,75 +661,94 @@ document.addEventListener("DOMContentLoaded", function () {
       .getElementById("productDescription")
       .value.trim();
     const price = parseFloat(document.getElementById("productPrice").value).toFixed(2);
+    const productImageInput = document.getElementById("product-Image");
 
-    if (!categoryId || !typeId || !variety || !description || !price) {
+    if (!categoryId || !typeId || !variety || !description || !price || !productImageInput.files[0]) {
       alert("Please fill in all fields and select an image!");
       return;
     }
 
-    // TODO: Image upload
-    const imageUrl = '';
-    console.log(`UserId: ${localStorage}`);
+    const imageFile = productImageInput.files[0];
+    const fileName = imageFile.name;
+    const fileType = imageFile.type;
 
-    // Create a new product object
+    console.log("File Name:", fileName);
+    console.log("File Type:", fileType);
+
+    const token = localStorage.getItem("token");
+    const response = await fetch(`https://field-to-fork-backend.onrender.com/s3/get-presigned-url?fileName=${fileName}&fileType=${fileType}`, {
+      method: "GET",
+      headers: {
+        Authorization: token,
+      },
+    });
+
+    if (!response.ok) {
+      console.log("Failed to get pre-signed URL");
+      alert("Unable to get upload URL!");
+      return;
+    }
+
+    const { url: presignedUrl, imageUrl } = await response.json();
+
+
+    console.log("Received pre-signed URL:", presignedUrl);
+    console.log("Generated Image URL:", imageUrl);
+
+    const uploadResponse = await fetch(presignedUrl, {
+      method: "PUT",
+      body: imageFile,
+    });
+
+    if (!uploadResponse.ok) {
+      const errorDetails = await uploadResponse.text();  
+      console.log("Failed to upload image to S3", uploadResponse);
+      console.log("Error details:", errorDetails);
+      alert("Failed to upload image!");
+      return;
+    }
+
+    console.log("Image uploaded successfully to S3!");
+
     const newProduct = {
       type_id: typeId,
       variety: variety,
       active: true,
       description: description,
       image_url: imageUrl,
-      price: price
+      price: price,
     };
 
     try {
-        await createProductOnServer(newProduct);
-        const prods = await fetchProducts();
-        renderProducts(prods);
-
+      console.log("Creating product on server:", newProduct);
+      await createProductOnServer(newProduct);
+      const prods = await fetchProducts();
+      renderProducts(prods);
     } catch (error) {
-        console.log("Error fetching types:", error);
-        alert("Unable to store product!");
-
+      console.log("Error creating product:", error);
+      alert("Unable to store product!");
     } finally {
-        // Close modal and reset form
-        addProductModal.hide();
-        addProductForm.reset();
+      addProductModal.hide();
+      addProductForm.reset();
     }
   });
 
-  // Function to convert image file to Base64
-  function convertImageToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  }
-
-  // Function to dynamically add a product to the UI
   function addProductToUI(product) {
     const productCard = document.createElement("div");
     productCard.classList.add("col-md-4");
-
     productCard.innerHTML = `
-            <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}">
-                <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
-                <div class="card-body">
-                    <h4 class="card-title product-title">${product.name}</h4>
-                    <p class="card-text product-id">id:${product.product.product_id}<p>
-                    <p class="card-text product-description">${product.description}</p>
-                    <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
-                    <p class="card-text"><strong>Price: £</strong>${product.price}</p>
-                    <a href="#" class="btn btn-outline-success">See More...</a>
-                </div>
-            </div>
-        `;
-
-    // Append to the product container
+      <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}">
+        <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
+        <div class="card-body">
+          <h4 class="card-title product-title">${product.name}</h4>
+          <p class="card-text product-id">id:${product.product.product_id}</p>
+          <p class="card-text product-description">${product.description}</p>
+          <p class="card-text product-distance"><strong>Distance:</strong> <span class="distance-value">N/A</span></p>
+          <p class="card-text"><strong>Price: £</strong>${product.price}</p>
+          <a href="#" class="btn btn-outline-success">See More...</a>
+        </div>
+      </div>
+    `;
     productContainer.prepend(productCard);
   }
 });
-
-
-   
