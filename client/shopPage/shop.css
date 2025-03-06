@@ -21,6 +21,15 @@
 .main-sidebar {
   margin-top: 10px;
   padding-left: 10px;
+  padding-left: 30px;
+}
+
+.btn-div {
+  padding-right: 30px;
+}
+
+input[type="radio"] {
+  accent-color: #0A7029;
 }
 
 .signin-up{
