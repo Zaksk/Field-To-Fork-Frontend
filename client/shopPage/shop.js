@@ -304,7 +304,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Check if a product has been selected
     if (!productId) {
       alert("No product selected. Please select a product first!");
       return;
@@ -317,30 +316,32 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const commentData = {
-      product_id: productId, // Use the selected product ID
+      product_id: productId,
       comment_text: commentContent,
     };
 
     try {
-        const data = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-          body: JSON.stringify(commentData),
-        };
-        console.log(`Comment: ${JSON.stringify(data)}`);
-      const response = await fetch(`${commentsUrl}/`, data);
+      const response = await fetch(`${commentsUrl}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify(commentData),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to post comment.");
       }
 
-      const newComment = await response.json();
+      // Wait for the comment to be stored in the database
+      await response.json();
 
-      displayComment(newComment);
-      commentText.value = ""; // Clear the comment text
+      // Clear the input field
+      commentText.value = "";
+
+      // Fetch all comments again, including the new one
+      fetchComments(productId);
     } catch (error) {
       console.log("Error posting comment:", error);
       alert("Failed to post comment. Please try again.");
