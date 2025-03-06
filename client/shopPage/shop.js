@@ -95,13 +95,25 @@ function renderProducts(products) {
                       <p class="card-text product-postcode"><strong>Location: </strong>${product.postcode}</p>
                       <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
                       <p class="card-text product-price"><strong>Price: £</strong>${product.product.price}</p>
-                      <a href="#" class="btn btn-outline-success">See More...</a>
+                      <a href="#" class="btn btn-outline-success seemore-btn">See More...</a>
                   </div>
               </div>
           `;
         productContainer.appendChild(productCard);
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const viewDetailButtons = document.querySelectorAll(".seemore-btn");
+    const modalDescription = document.querySelector(".product-description");
+    
+    viewDetailButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const fullDescription = this.getAttribute("data-description");
+            modalDescription.textContent = fullDescription;
+        })
+    })
+})
 
 // API request to fetch & display products cards; and add  filter and search functionality
 document.addEventListener("DOMContentLoaded", async () => {

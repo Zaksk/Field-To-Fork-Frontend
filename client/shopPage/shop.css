@@ -33,6 +33,16 @@ input[type="radio"] {
   margin-top: 15px
 }
 
+.product-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 6em;
+  line-height: 1.5em;
+}
+
 .signin-up{
   
     color:rgb(99, 98, 98);
