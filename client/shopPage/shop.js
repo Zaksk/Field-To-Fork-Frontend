@@ -402,13 +402,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// Distance calculator
 document.addEventListener("DOMContentLoaded", () => {
     const productContainer = document.getElementById("productContainer");
     const sortByDistanceButton = document.getElementById("sortByDistance");
     const postcodeInput = document.getElementById("postcode");
     let lastUsedPostcode = "";
-    const cachedDistances = {}; // Cache API results
+    const cachedDistances = {};
 
     sortByDistanceButton.addEventListener("click", async () => {
         const userPostcode = postcodeInput.value.trim();
@@ -437,7 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function calculateDistance({ lat: lat1, lon: lon1 }, { lat: lat2, lon: lon2 }) {
         const R = 6371, dLat = (lat2 - lat1) * (Math.PI / 180), dLon = (lon2 - lon1) * (Math.PI / 180);
         const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) ** 2;
-        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) * 0.621371; // Convert km to miles
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) * 0.621371; 
     }
 
     async function getDistance(postcode1, postcode2) {
