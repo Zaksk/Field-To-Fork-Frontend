@@ -681,12 +681,12 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("File Type:", fileType);
 
     const token = localStorage.getItem("token");
-    const response = await fetch(`https://field-to-fork-backend.onrender.com/s3/get-presigned-url?fileName=${fileName}&fileType=${fileType}`, {
+    const encodedFileName = encodeURIComponent(fileName);
+    const response = await fetch(`https://field-to-fork-backend.onrender.com/s3/get-presigned-url?fileName=${encodedFileName}&fileType=${fileType}`, {
       method: "GET",
-      headers: {
-        Authorization: token,
-      },
+      headers: { Authorization: token },
     });
+    
 
     if (!response.ok) {
       console.log("Failed to get pre-signed URL");
@@ -702,16 +702,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const uploadResponse = await fetch(presignedUrl, {
       method: "PUT",
+      headers: {
+        "x-amz-acl": "public-read",
+      },
       body: imageFile,
     });
+    
 
     if (!uploadResponse.ok) {
       const errorDetails = await uploadResponse.text();  
-      console.log("Failed to upload image to S3", uploadResponse);
-      console.log("Error details:", errorDetails);
-      alert("Failed to upload image!");
+      console.error("Failed to upload image to S3:", errorDetails);
+      alert(`Image upload failed: ${errorDetails}`);
       return;
     }
+    
 
     console.log("Image uploaded successfully to S3!");
 
