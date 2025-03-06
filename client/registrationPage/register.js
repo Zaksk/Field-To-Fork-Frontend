@@ -1,8 +1,9 @@
+const registerUrl = `${apiUrl}/users/register`;
+
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const form = new FormData(e.target);
-
     
     const options = {
         method: "POST",
@@ -19,7 +20,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
         })
     };
 
-    const response = await fetch("https://field-to-fork-backend.onrender.com/users/register", options);
+    const response = await fetch(registerUrl, options);
     const data = await response.json();
     
     if (response.ok) {
@@ -27,8 +28,5 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     } else {
         alert(data.error);
     }
-
-
-
     
 });

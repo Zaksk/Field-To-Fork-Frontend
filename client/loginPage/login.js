@@ -1,3 +1,5 @@
+const loginUrl = `${apiUrl}/users/login`;
+
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -15,7 +17,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         })
     };
 
-    const response = await fetch("https://field-to-fork-backend.onrender.com/users/login", options);
+    const response = await fetch(loginUrl, options);
     const data = await response.json();
     console.log(data)
 
