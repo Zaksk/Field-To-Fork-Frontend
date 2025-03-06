@@ -83,13 +83,14 @@ function renderProducts(products) {
             console.warn(`Postcode not fully capitalized: "${product.postcode}"`);
             product.postcode = product.postcode.toUpperCase();
         }
-  
+        const productVariety = capitalizeWords(product.product.variety.replace(/_/g, " "));     
         productCard.innerHTML = `
               <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}" data-product-id="${product.id}">
                   <img src="${product.product.image_url}" class="card-img-top product-image" alt="${product.type}" data-product-id="${product.id}">
                   <div class="card-body">
                       <h4 class="card-title product-title">${product.type}</h4>
-                      <p class="card-text product-id">id:${product.product.product_id}<p>
+                      <p class="card-text product-id">id:${product.product.product_id}</p>
+                      <p class="card-text product-variety">${productVariety}</p>
                       <p class="card-text product-description">${product.product.description}</p>
                       <p class="card-text product-postcode"><strong>Location: </strong>${product.postcode}</p>
                       <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
