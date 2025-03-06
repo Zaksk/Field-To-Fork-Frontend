@@ -43,43 +43,48 @@ async function fetchProducts() {
     }
 }
 
-// Renders the list of products
 function renderProducts(products) {
     productContainer.innerHTML = "";
   
     if (products.length === 0) {
-      productContainer.innerHTML = "<p>No products found for this category.</p>";
+        productContainer.innerHTML = "<p>No products found for this category.</p>";
     }
   
     function isCapitalized(str) {
-      return str.split(" ").every(word => word.charAt(0) === word.charAt(0).toUpperCase());
+        return str.split(" ").every(word => word.charAt(0) === word.charAt(0).toUpperCase());
     }
   
     function capitalizeWords(str) {
-      return str.replace(/\b\w/g, char => char.toUpperCase());
+        return str.replace(/\b\w/g, char => char.toUpperCase());
     }
-  
+
+    function isUppercase(str) {
+        return str === str.toUpperCase();
+    }
+
     products.forEach((product) => {
-      const productCard = document.createElement("div");
-      productCard.classList.add("col-md-4");
+        const productCard = document.createElement("div");
+        productCard.classList.add("col-md-4");
   
-      // Check capitalization of fields
-      if (!isCapitalized(product.type)) {
-        console.warn(`Product Type not capitalized: "${product.type}"`);
-        product.type = capitalizeWords(product.type); // Correct it
-      }
+        // Check and capitalize Product Type
+        if (!isCapitalized(product.type)) {
+            console.warn(`Product Type not capitalized: "${product.type}"`);
+            product.type = capitalizeWords(product.type);
+        }
   
-      if (!isCapitalized(product.product.description)) {
-        console.warn(`Product Description not capitalized: "${product.product.description}"`);
-        product.product.description = capitalizeWords(product.product.description); // Correct it
-      }
+        // Check and capitalize Description
+        if (!isCapitalized(product.product.description)) {
+            console.warn(`Product Description not capitalized: "${product.product.description}"`);
+            product.product.description = capitalizeWords(product.product.description);
+        }
   
-      if (!isCapitalized(product.postcode)) {
-        console.warn(`Postcode not capitalized: "${product.postcode}"`);
-        product.postcode = capitalizeWords(product.postcode); // Correct it
-      }
+        // Ensure Postcode is fully uppercase
+        if (!isUppercase(product.postcode)) {
+            console.warn(`Postcode not fully capitalized: "${product.postcode}"`);
+            product.postcode = product.postcode.toUpperCase();
+        }
   
-      productCard.innerHTML = `
+        productCard.innerHTML = `
               <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}" data-product-id="${product.id}">
                   <img src="${product.product.image_url}" class="card-img-top product-image" alt="${product.type}" data-product-id="${product.id}">
                   <div class="card-body">
@@ -93,9 +98,9 @@ function renderProducts(products) {
                   </div>
               </div>
           `;
-      productContainer.appendChild(productCard);
+        productContainer.appendChild(productCard);
     });
-  }
+}
 
 // API request to fetch & display products cards; and add  filter and search functionality
 document.addEventListener("DOMContentLoaded", async () => {
