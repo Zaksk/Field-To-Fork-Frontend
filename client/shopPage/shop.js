@@ -45,33 +45,57 @@ async function fetchProducts() {
 
 // Renders the list of products
 function renderProducts(products) {
-  productContainer.innerHTML = "";
-
-  if (products.length === 0) {
-    productContainer.innerHTML = "<p>No products found for this category.</p>";
+    productContainer.innerHTML = "";
+  
+    if (products.length === 0) {
+      productContainer.innerHTML = "<p>No products found for this category.</p>";
+    }
+  
+    function isCapitalized(str) {
+      return str.split(" ").every(word => word.charAt(0) === word.charAt(0).toUpperCase());
+    }
+  
+    function capitalizeWords(str) {
+      return str.replace(/\b\w/g, char => char.toUpperCase());
+    }
+  
+    products.forEach((product) => {
+      const productCard = document.createElement("div");
+      productCard.classList.add("col-md-4");
+  
+      // Check capitalization of fields
+      if (!isCapitalized(product.type)) {
+        console.warn(`Product Type not capitalized: "${product.type}"`);
+        product.type = capitalizeWords(product.type); // Correct it
+      }
+  
+      if (!isCapitalized(product.product.description)) {
+        console.warn(`Product Description not capitalized: "${product.product.description}"`);
+        product.product.description = capitalizeWords(product.product.description); // Correct it
+      }
+  
+      if (!isCapitalized(product.postcode)) {
+        console.warn(`Postcode not capitalized: "${product.postcode}"`);
+        product.postcode = capitalizeWords(product.postcode); // Correct it
+      }
+  
+      productCard.innerHTML = `
+              <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}" data-product-id="${product.id}">
+                  <img src="${product.product.image_url}" class="card-img-top product-image" alt="${product.type}" data-product-id="${product.id}">
+                  <div class="card-body">
+                      <h4 class="card-title product-title">${product.type}</h4>
+                      <p class="card-text product-id">id:${product.product.product_id}<p>
+                      <p class="card-text product-description">${product.product.description}</p>
+                      <p class="card-text product-postcode"><strong>Location: </strong>${product.postcode}</p>
+                      <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
+                      <p class="card-text product-price"><strong>Price: £</strong>${product.product.price}</p>
+                      <a href="#" class="btn btn-outline-success">See More...</a>
+                  </div>
+              </div>
+          `;
+      productContainer.appendChild(productCard);
+    });
   }
-
-  products.forEach((product) => {
-    const productCard = document.createElement("div");
-    productCard.classList.add("col-md-4");
-
-    productCard.innerHTML = `
-            <div class="product-card card shadow-sm p-3" data-category="${product.category}" data-postcode="${product.postcode}" data-product-id="${product.id}">
-                <img src="${product.product.image_url}" class="card-img-top product-image" alt="${product.type}" data-product-id="${product.id}">
-                <div class="card-body">
-                    <h4 class="card-title product-title">${product.type}</h4>
-                    <p class="card-text product-id">id:${product.product.product_id}<p>
-                    <p class="card-text product-description">${product.product.description}</p>
-                    <p class="card-texr product-postcode"><strong>Location: </strong>${product.postcode}<p>
-                    <p class="card-text product-distance"><strong>Distance: </strong><span class="distance-value">N/A</span></p>
-                    <p class="card-text product-price"><strong>Price: £</strong>${product.product.price}</p>
-                    <a href="#" class="btn btn-outline-success">See More...</a>
-                </div>
-            </div>
-        `;
-    productContainer.appendChild(productCard);
-  });
-}
 
 // API request to fetch & display products cards; and add  filter and search functionality
 document.addEventListener("DOMContentLoaded", async () => {
