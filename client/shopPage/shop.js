@@ -7,16 +7,10 @@ const productCards = document.querySelectorAll(".product-card");
 const dataBtn = document.getElementById("dataBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 
-// Urls to be used
-// MVC
-//const apiUrl = "https://field-to-fork-backend.onrender.com";
-const apiUrl = "http://ec2-13-41-205-113.eu-west-2.compute.amazonaws.com:3000";
+// URLS used in this module
 const productsUrl = `${apiUrl}/products`;
 const usersUrl = `${apiUrl}/users`;
 const commentsUrl = `${usersUrl}/comments`;
-// Postcode API
-const postcodesUrl = "https://api.postcodes.io/postcodes";
-
 
 dataBtn.addEventListener("click", () => {
   window.location.assign("../visualsPage/data.html");

@@ -1,6 +1,4 @@
-// const loginUrl = "https://field-to-fork-backend.onrender.com/users/login";
-const loginUrl =
-  "http://ec2-13-41-205-113.eu-west-2.compute.amazonaws.com:3000/users/login";
+const loginUrl = `${apiUrl}/users/login`;
 
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();

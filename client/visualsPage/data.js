@@ -5,8 +5,7 @@ dataBtn.addEventListener("click", () => {
 })
 
 // Visuals API
-const visualsApi =
-  "http://ec2-13-41-205-113.eu-west-2.compute.amazonaws.com:5000/";
+const visualsApi = `https://${baseAddress}:667/`;
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("visualsId").setAttribute("src", visualsApi);
