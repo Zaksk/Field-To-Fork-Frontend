@@ -72,11 +72,11 @@ function renderProducts(products) {
             product.type = capitalizeWords(product.type);
         }
   
-        // Check and capitalize Description
-        if (!isCapitalized(product.product.description)) {
-            console.warn(`Product Description not capitalized: "${product.product.description}"`);
-            product.product.description = capitalizeWords(product.product.description);
-        }
+        // // Check and capitalize Description
+        // if (!isCapitalized(product.product.description)) {
+        //     console.warn(`Product Description not capitalized: "${product.product.description}"`);
+        //     product.product.description = capitalizeWords(product.product.description);
+        // }
   
         // Ensure Postcode is fully uppercase
         if (!isUppercase(product.postcode)) {
